@@ -1,0 +1,38 @@
+# Python
+*.pyc
+__pycache__/
+*.pyo
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Database
+db.sqlite3
+
+# Environment
+.env
+
+# Media uploads
+media/
+
+# Static collected
+staticfiles/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (docs build artifacts)
+node_modules/
+
+# Claude
+.claude/
+~$*

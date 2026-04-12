@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0a0f1e" />
+
+  {# SEO #}
+  <title>{% block title %}{{ site_name }} | {{ site_tagline }}{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}{{ site_settings.meta_description }}{% endblock %}" />
+  <meta name="keywords" content="{% block meta_keywords %}{{ site_settings.meta_keywords }}{% endblock %}" />
+  <meta name="author" content="{{ site_name }}" />
+
+  {# Open Graph #}
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="{{ site_name }} | {{ site_tagline }}" />
+  <meta property="og:description" content="{{ site_settings.meta_description }}" />
+
+  {# Fonts #}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  {# Animated aurora background #}
+  <div class="aurora" aria-hidden="true">
+    <span class="aurora__blob aurora__blob--1"></span>
+    <span class="aurora__blob aurora__blob--2"></span>
+    <span class="aurora__blob aurora__blob--3"></span>
+  </div>
+  <div class="grid-overlay" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <nav class="nav shell" aria-label="Main navigation">
+      <a class="brand" href="{% url 'core:home' %}" aria-label="Homepage">
+        <!-- <span class="brand-mark">
+          <span class="brand-mark__dot"></span>
+        </span> -->
+        <span class="brand-text">{{ site_name }}</span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-controls="primary-menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="menu" id="primary-menu">
+        <li><a href="{% url 'core:home' %}#about">About</a></li>
+        <li><a href="{% url 'core:home' %}#projects">Projects</a></li>
+        <li><a href="{% url 'core:home' %}#skills">Skills</a></li>
+        <li><a href="{% url 'core:home' %}#experience">Experience</a></li>
+        <li><a href="{% url 'contact:contact' %}">Contact</a></li>
+      </ul>
+
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" aria-pressed="false">
+        <span class="theme-toggle__track" aria-hidden="true">
+          <span class="theme-toggle__icon theme-toggle__icon--sun">☀</span>
+          <span class="theme-toggle__icon theme-toggle__icon--moon">☾</span>
+          <span class="theme-toggle__thumb"></span>
+        </span>
+        <span class="sr-only">Toggle color theme</span>
+      </button>
+    </nav>
+  </header>
+
+  <main id="top">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer__inner">
+      <div class="footer__brand">
+        <p class="footer__name">{{ site_name }}</p>
+        <p class="footer__tagline">{{ site_tagline }}</p>
+      </div>
+      <div class="footer__links">
+        {% if site_settings.github_url %}<a href="{{ site_settings.github_url }}" target="_blank" rel="noopener">GitHub</a>{% endif %}
+        {% if site_settings.linkedin_url %}<a href="{{ site_settings.linkedin_url }}" target="_blank" rel="noopener">LinkedIn</a>{% endif %}
+        {% if site_settings.email %}<a href="mailto:{{ site_settings.email }}">Email</a>{% endif %}
+      </div>
+      <p class="footer__copy">© {% now "Y" %} {{ site_name }}. Crafted with Django.</p>
+    </div>
+  </footer>
+
+  <script src="{% static 'js/app.js' %}" defer></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>
