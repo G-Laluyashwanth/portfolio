@@ -9,8 +9,6 @@
 
   {# ===== HERO ===== #}
   <header class="case-hero shell reveal">
-    <a href="{% url 'projects:list' %}" class="back-link">← All Projects</a>
-
     <div class="case-hero__top">
       <span class="chip">{{ project.get_category_display }}</span>
       {% if project.company %}<span class="case-hero__company">{{ project.company }}</span>{% endif %}

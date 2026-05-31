@@ -110,47 +110,42 @@
   </div>
 
   {% if featured_projects %}
-  <div class="project-grid">
+  <div class="project-list">
     {% for project in featured_projects %}
-    <article class="project-card card reveal">
-      {% if project.cover_image %}
-        <div class="project-card__media">
-          <img src="{{ project.cover_image.url }}" alt="{{ project.title }}" loading="lazy" />
-        </div>
-      {% else %}
-        <div class="project-card__media project-card__media--placeholder">
-          <span>{{ project.title|slice:":2" }}</span>
-        </div>
+    <article class="project-entry card reveal">
+      <div class="project-entry__top">
+        <span class="chip">{{ project.get_category_display }}</span>
+        {% if project.start_date %}
+        <span class="project-entry__period">{{ project.start_date|date:"Y" }} — {% if project.is_ongoing %}Present{% else %}{{ project.end_date|date:"Y" }}{% endif %}</span>
+        {% endif %}
+      </div>
+
+      <h3 class="project-entry__title">{{ project.title }}</h3>
+
+      {% if project.role or project.company %}
+      <p class="project-entry__role">{{ project.role }}{% if project.role and project.company %} · {% endif %}{{ project.company }}</p>
       {% endif %}
-      <div class="project-card__body">
-        <div class="project-card__meta">
-          <span class="chip">{{ project.get_category_display }}</span>
-          {% if project.company %}<span class="project-card__company">{{ project.company }}</span>{% endif %}
-        </div>
-        <h3 class="project-card__title">{{ project.title }}</h3>
-        <p class="project-card__desc">{{ project.short_description }}</p>
 
-        {% if project.features.all %}
-        <ul class="project-card__features">
-          {% for feature in project.features.all|slice:":3" %}
-          <li>{{ feature.text }}</li>
-          {% endfor %}
-        </ul>
-        {% endif %}
+      <p class="project-entry__desc">{{ project.short_description }}</p>
 
-        {% if project.tech_stack.all %}
-        <div class="project-card__stack">
-          {% for tech in project.tech_stack.all %}
-          <span class="tech-chip">{{ tech.name }}</span>
-          {% endfor %}
-        </div>
-        {% endif %}
+      {% if project.impact_headline %}
+      <p class="project-entry__impact">
+        <span class="project-entry__impact-label">Impact</span>
+        <span>{{ project.impact_headline }}</span>
+      </p>
+      {% endif %}
 
-        <div class="project-card__actions">
-          <a href="{{ project.get_absolute_url }}" class="project-card__link">View Case Study →</a>
-          {% if project.live_url %}<a href="{{ project.live_url }}" target="_blank" rel="noopener" class="project-card__link project-card__link--ghost">Live ↗</a>{% endif %}
-          {% if project.github_url %}<a href="{{ project.github_url }}" target="_blank" rel="noopener" class="project-card__link project-card__link--ghost">GitHub ↗</a>{% endif %}
-        </div>
+      {% if project.tech_stack.all %}
+      <div class="project-entry__tech" aria-label="Tech stack">
+        {% for tech in project.tech_stack.all|slice:":6" %}<span class="tech-chip">{{ tech.name }}</span>{% endfor %}
+        {% if project.tech_stack.count > 6 %}<span class="tech-chip tech-chip--more">+{{ project.tech_stack.count|add:"-6" }}</span>{% endif %}
+      </div>
+      {% endif %}
+
+      <div class="project-entry__actions">
+        <a href="{{ project.get_absolute_url }}" class="project-entry__cta">View case study <span aria-hidden="true">→</span></a>
+        {% if project.live_url %}<a href="{{ project.live_url }}" target="_blank" rel="noopener" class="project-entry__link">Live ↗</a>{% endif %}
+        {% if project.github_url %}<a href="{{ project.github_url }}" target="_blank" rel="noopener" class="project-entry__link">GitHub ↗</a>{% endif %}
       </div>
     </article>
     {% endfor %}

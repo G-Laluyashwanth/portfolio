@@ -9,7 +9,7 @@ def home(request):
     context = {
         'featured_projects': Project.objects.filter(
             is_published=True, is_featured=True
-        ).prefetch_related('tech_stack', 'features')[:6],
+        ).prefetch_related('tech_stack')[:6],
         'skill_categories': SkillCategory.objects.prefetch_related('skills').all(),
         'experiences': Experience.objects.filter(is_published=True),
         'educations': Education.objects.all(),

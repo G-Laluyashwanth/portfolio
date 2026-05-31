@@ -1,3 +1,5 @@
+import logging
+
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.core.mail import EmailMultiAlternatives
@@ -6,6 +8,8 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 
 from .forms import ContactForm
+
+logger = logging.getLogger(__name__)
 
 
 def _client_ip(request):
@@ -39,9 +43,9 @@ def contact(request):
                 )
                 email.attach_alternative(html_body, 'text/html')
                 email.send(fail_silently=False)
-            except Exception as e:
+            except Exception:
                 # Log but don't break user flow — submission is saved
-                print(f'[contact] Email send failed: {e}')
+                logger.exception('Contact notification email failed to send')
 
             messages.success(request, "Thanks for reaching out! I'll get back to you within 24-48 hours.")
             return redirect(reverse('contact:contact'))

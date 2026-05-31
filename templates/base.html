@@ -12,10 +12,19 @@
   <meta name="keywords" content="{% block meta_keywords %}{{ site_settings.meta_keywords }}{% endblock %}" />
   <meta name="author" content="{{ site_name }}" />
 
+  <link rel="canonical" href="{{ request.build_absolute_uri }}" />
+
   {# Open Graph #}
   <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="{{ site_name }}" />
+  <meta property="og:url" content="{{ request.build_absolute_uri }}" />
   <meta property="og:title" content="{{ site_name }} | {{ site_tagline }}" />
   <meta property="og:description" content="{{ site_settings.meta_description }}" />
+
+  {# Twitter #}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{{ site_name }} | {{ site_tagline }}" />
+  <meta name="twitter:description" content="{{ site_settings.meta_description }}" />
 
   {# Fonts #}
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -26,6 +35,18 @@
   {% block extra_head %}{% endblock %}
 </head>
 <body>
+  {# Apply saved theme before paint to avoid a flash of the wrong theme #}
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('theme');
+        var dark = stored ? stored === 'dark'
+                          : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (dark) document.body.classList.add('dark');
+      } catch (e) {}
+    })();
+  </script>
+
   {# Animated aurora background #}
   <div class="aurora" aria-hidden="true">
     <span class="aurora__blob aurora__blob--1"></span>
@@ -37,9 +58,6 @@
   <header class="topbar">
     <nav class="nav shell" aria-label="Main navigation">
       <a class="brand" href="{% url 'core:home' %}" aria-label="Homepage">
-        <!-- <span class="brand-mark">
-          <span class="brand-mark__dot"></span>
-        </span> -->
         <span class="brand-text">{{ site_name }}</span>
       </a>
 
