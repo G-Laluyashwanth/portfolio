@@ -364,8 +364,8 @@ body.dark .theme-toggle__icon--moon { opacity: 1; }
 .hero {
   padding-block: 100px 80px;
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: 60px;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 48px;
   align-items: center;
   min-height: calc(100vh - 76px);
 }
