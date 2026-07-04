@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SiteSettings, HeroSection
+from .models import SiteSettings, HeroSection, Post
 
 
 @admin.register(SiteSettings)
@@ -20,7 +20,7 @@ class HeroSectionAdmin(admin.ModelAdmin):
     list_editable = ('is_active',)
     fieldsets = (
         ('Content', {
-            'fields': ('eyebrow', 'headline', 'subheadline', 'typing_phrases'),
+            'fields': ('eyebrow', 'headline', 'subheadline'),
         }),
         ('Call to Action', {
             'fields': ('cta_primary_label', 'cta_primary_url',
@@ -30,3 +30,13 @@ class HeroSectionAdmin(admin.ModelAdmin):
             'fields': ('is_active',),
         }),
     )
+
+
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ('title', 'date', 'is_published', 'is_external')
+    list_editable = ('is_published',)
+    list_filter = ('is_published',)
+    search_fields = ('title', 'excerpt', 'content')
+    prepopulated_fields = {'slug': ('title',)}
+    date_hierarchy = 'date'

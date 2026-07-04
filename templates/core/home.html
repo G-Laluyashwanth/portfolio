@@ -1,303 +1,117 @@
 {% extends 'base.html' %}
-{% load static %}
 
 {% block content %}
 
-{# ========== HERO ========== #}
-<section class="hero shell">
-  <div class="hero__content reveal">
-    <p class="hero__hello">Hello, 👋</p>
-    <h1 class="hero__title">
-      I'm <span class="gradient-text">Lalu Yashwanth!</span>
-    </h1>
-    <p class="hero__role">
-      <span class="hero__typing-label">&gt;</span>
-      <span id="typing-target"></span><span class="hero__caret"></span>
-    </p>
-    {% if hero %}
-      {{ hero.get_typing_phrases_list|json_script:"typing-phrases" }}
-    {% else %}
-      <script id="typing-phrases" type="application/json">["Full-Stack Developer","Python & Django Engineer","Machine Learning Enthusiast","REST API Architect"]</script>
-    {% endif %}
-    <p class="hero__lead">
-      Full-Stack Developer building production-grade web apps with <strong>Python, Django</strong> &amp; <strong>ML</strong>. 3+ years shipping enterprise systems, REST APIs, and automation tools.
-    </p>
-    <div class="hero__actions">
-      <a class="btn btn-primary" href="{{ hero.cta_primary_url|default:'#projects' }}">
-        {{ hero.cta_primary_label|default:'View Projects' }}
-        <span aria-hidden="true">→</span>
-      </a>
-      <a class="btn btn-ghost" href="{{ hero.cta_secondary_url|default:'/contact/' }}">
-        {{ hero.cta_secondary_label|default:'Get in Touch' }}
-      </a>
-    </div>
-    <div class="hero__meta">
-      {% if site_settings.location %}<span>📍 {{ site_settings.location }}</span>{% endif %}
-      <span>•</span>
-      <span>3+ years experience</span>
-      <span>•</span>
-      <span>Open to opportunities</span>
-    </div>
-  </div>
+{# ---------- INTRO ---------- #}
+<section class="intro">
+  <p class="intro__role">{{ site_tagline }}{% if site_settings.location %} · {{ site_settings.location }}{% endif %}</p>
 
-  <aside class="hero__panel reveal">
-    <div class="code-window card">
-      <div class="code-window__chrome">
-        <span class="code-window__dot code-window__dot--red"></span>
-        <span class="code-window__dot code-window__dot--yellow"></span>
-        <span class="code-window__dot code-window__dot--green"></span>
-        <span class="code-window__filename">profile.py</span>
-      </div>
-      <pre class="code-window__body"><code><span class="tok-kw">class</span> <span class="tok-cls">Developer</span>:
-    name        = <span class="tok-str">"Lalu Yashwanth"</span>
-    role        = <span class="tok-str">"Full-Stack Developer"</span>
-    company     = <span class="tok-str">"Concept QA Labs"</span>
-    location    = <span class="tok-str">"Hyderabad, India"</span>
-    experience  = <span class="tok-num">3</span>  <span class="tok-com"># years</span>
-
-    stack = {
-        <span class="tok-str">"backend"</span>:  [<span class="tok-str">"Python"</span>, <span class="tok-str">"Django"</span>, <span class="tok-str">"Jira"</span>],
-        <span class="tok-str">"database"</span>: [<span class="tok-str">"PostgreSQL"</span>, <span class="tok-str">"MySQL"</span>],
-        <span class="tok-str">"frontend"</span>: [<span class="tok-str">"JavaScript"</span>, <span class="tok-str">"HTML5"</span>, <span class="tok-str">"CSS3"</span>],
-        <span class="tok-str">"ml"</span>:       [<span class="tok-str">"scikit-learn"</span>, <span class="tok-str">"TensorFlow"</span>, <span class="tok-str">"Pandas"</span>,
-                    <span class="tok-str">"NumPy"</span>, <span class="tok-str">"Matplotlib & Seaborn"</span>],
-    }
-
-    <span class="tok-kw">def</span> <span class="tok-fn">current_focus</span>(self):
-        <span class="tok-kw">return</span> <span class="tok-str">"ML + Deep Learning"</span></code></pre>
-    </div>
-  </aside>
+  {% if hero.subheadline %}
+    <p class="intro__lead">{{ hero.subheadline }}</p>
+  {% else %}
+    <p class="intro__lead">I build full-stack systems with <strong>Python</strong> and <strong>Django</strong>, and I'm increasingly drawn to the seam where clean engineering meets <strong>machine learning</strong> — what becomes possible when software can learn instead of just follow instructions.</p>
+  {% endif %}
 </section>
 
-{# ========== ABOUT ========== #}
-<section id="about" class="section shell">
-  <div class="section-head reveal">
-    <span class="eyebrow">About</span>
-    <h2 class="section-title">Full-Stack Developer with a passion for <span class="gradient-text">clean architecture</span> and <span class="gradient-text">data-driven systems</span>.</h2>
-  </div>
-  <div class="about-grid">
-    <div class="about__copy card reveal">
-      <p>I'm a Full-Stack Software Developer with 3+ years of professional experience building enterprise-grade web applications and automation systems. Based in Hyderabad, India, I specialize in Python/Django backend development, PostgreSQL database architecture, and RESTful API design.</p>
-      <p>At <strong>Concept QA Labs Pvt. Ltd.</strong>, I've led the development of multiple production systems including a Client Management System for ISO/CMMI audit tracking, an automated Document Generator that eliminates hours of manual work per engagement, and corporate websites — all while maintaining clean code, following Agile practices, and collaborating cross-functionally.</p>
-      <p>Currently advancing into <strong>Machine Learning and Deep Learning</strong> — applying scikit-learn, TensorFlow/Keras, Pandas, and NumPy to integrate predictive features into production applications.</p>
-    </div>
-    <div class="about__stats reveal">
-      <div class="stat card">
-        <p class="stat__num gradient-text">3+</p>
-        <p class="stat__label">Years Experience</p>
-      </div>
-      <div class="stat card">
-        <p class="stat__num gradient-text">4+</p>
-        <p class="stat__label">Production Projects</p>
-      </div>
-      <div class="stat card">
-        <p class="stat__num gradient-text">10+</p>
-        <p class="stat__label">Core Technologies</p>
-      </div>
-      <div class="stat card">
-        <p class="stat__num gradient-text">100%</p>
-        <p class="stat__label">Ownership Mindset</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-{# ========== PROJECTS ========== #}
-<section id="projects" class="section shell">
-  <div class="section-head reveal">
-    <span class="eyebrow">Featured Work</span>
-    <h2 class="section-title">Production projects with <span class="gradient-text">measurable outcomes</span>.</h2>
-    <p class="section-lead">Enterprise systems, automation tools, and data-driven applications built end-to-end with Python, Django, and PostgreSQL.</p>
-  </div>
-
-  {% if featured_projects %}
-  <div class="project-list">
+{# ---------- SELECTED WORK ---------- #}
+{% if featured_projects %}
+<section id="projects" class="block">
+  <h2 class="block__label">Projects</h2>
+  <ul class="list">
     {% for project in featured_projects %}
-    <article class="project-entry card reveal">
-      <div class="project-entry__top">
-        <span class="chip">{{ project.get_category_display }}</span>
-        {% if project.start_date %}
-        <span class="project-entry__period">{{ project.start_date|date:"Y" }} — {% if project.is_ongoing %}Present{% else %}{{ project.end_date|date:"Y" }}{% endif %}</span>
-        {% endif %}
+    <li class="item">
+      <div class="item__head">
+        <a class="item__title" href="{{ project.get_absolute_url }}">{{ project.title }}</a>
       </div>
-
-      <h3 class="project-entry__title">{{ project.title }}</h3>
-
-      {% if project.role or project.company %}
-      <p class="project-entry__role">{{ project.role }}{% if project.role and project.company %} · {% endif %}{{ project.company }}</p>
-      {% endif %}
-
-      <p class="project-entry__desc">{{ project.short_description }}</p>
-
-      {% if project.impact_headline %}
-      <p class="project-entry__impact">
-        <span class="project-entry__impact-label">Impact</span>
-        <span>{{ project.impact_headline }}</span>
+      <p class="item__desc">{{ project.short_description }}</p>
+      <p class="item__links">
+        <a href="{{ project.get_absolute_url }}">Case study →</a>
+        {% if project.live_url %}<a href="{{ project.live_url }}" target="_blank" rel="noopener">Live</a>{% endif %}
+        {% if project.github_url %}<a href="{{ project.github_url }}" target="_blank" rel="noopener">GitHub</a>{% endif %}
       </p>
-      {% endif %}
-
-      {% if project.tech_stack.all %}
-      <div class="project-entry__tech" aria-label="Tech stack">
-        {% for tech in project.tech_stack.all|slice:":6" %}<span class="tech-chip">{{ tech.name }}</span>{% endfor %}
-        {% if project.tech_stack.count > 6 %}<span class="tech-chip tech-chip--more">+{{ project.tech_stack.count|add:"-6" }}</span>{% endif %}
-      </div>
-      {% endif %}
-
-      <div class="project-entry__actions">
-        <a href="{{ project.get_absolute_url }}" class="project-entry__cta">View case study <span aria-hidden="true">→</span></a>
-        {% if project.live_url %}<a href="{{ project.live_url }}" target="_blank" rel="noopener" class="project-entry__link">Live ↗</a>{% endif %}
-        {% if project.github_url %}<a href="{{ project.github_url }}" target="_blank" rel="noopener" class="project-entry__link">GitHub ↗</a>{% endif %}
-      </div>
-    </article>
+    </li>
     {% endfor %}
-  </div>
-  {% else %}
-  <div class="empty-state card reveal">
-    <p>No projects published yet. Add some from the <a href="/admin/projects/project/">Django admin</a>.</p>
-  </div>
-  {% endif %}
+  </ul>
 </section>
+{% endif %}
 
-{# ========== SKILLS ========== #}
-<section id="skills" class="section shell">
-  <div class="section-head reveal">
-    <span class="eyebrow">Tech Stack</span>
-    <h2 class="section-title">Tools I use to <span class="gradient-text">ship production software</span>.</h2>
-    <p class="section-lead">A curated stack focused on maintainability, performance, and developer productivity.</p>
-  </div>
-
-  {% if skill_categories %}
-  <div class="skills-tabbed reveal">
-    {# ── Category filter tabs ── #}
-    <nav class="skills-tabs" role="tablist" aria-label="Skill categories">
-      {% for category in skill_categories %}
-      <button class="skills-tab{% if forloop.first %} is-active{% endif %}" role="tab" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" data-filter="cat-{{ category.id }}">
-        {% if category.icon %}<span class="skills-tab__icon">{{ category.icon }}</span>{% endif %}
-        {{ category.name }}
-      </button>
-      {% endfor %}
-    </nav>
-
-    {# ── Skills chip cloud ── #}
-    <div class="skills-cloud">
-      {% for category in skill_categories %}
-      {% for skill in category.skills.all %}
-      <span class="skill-chip skill-chip--{{ skill.proficiency }}" data-category="cat-{{ category.id }}" title="{{ category.name }} · {{ skill.get_proficiency_display }}">
-        {{ skill.name }}
-      </span>
-      {% endfor %}
-      {% endfor %}
-    </div>
-
-    {# ── Legend ── #}
-    <div class="skills-legend">
-      <span class="skills-legend__dot skills-legend__dot--expert"></span> Expert
-      <span class="skills-legend__dot skills-legend__dot--advanced"></span> Advanced
-      <span class="skills-legend__dot skills-legend__dot--intermediate"></span> Intermediate
-      <span class="skills-legend__dot skills-legend__dot--beginner"></span> Beginner
-    </div>
-  </div>
-  {% else %}
-  <div class="empty-state card reveal">
-    <p>No skills added yet. Add some from the <a href="/admin/skills/">Django admin</a>.</p>
-  </div>
-  {% endif %}
+{# ---------- SKILLS ---------- #}
+{% if skill_categories %}
+<section id="skills" class="block">
+  <h2 class="block__label">Skills</h2>
+  <ul class="list list--tight">
+    {% for category in skill_categories %}
+    <li class="item">
+      <div class="item__head"><span class="item__title">{{ category.name }}</span></div>
+      <p class="item__desc">{% for skill in category.skills.all|slice:":8" %}{{ skill.name }}{% if not forloop.last %} · {% endif %}{% endfor %}</p>
+    </li>
+    {% endfor %}
+  </ul>
 </section>
+{% endif %}
 
-{# ========== EXPERIENCE ========== #}
-<section id="experience" class="section shell">
-  <div class="section-head reveal">
-    <span class="eyebrow">Career</span>
-    <h2 class="section-title">Professional <span class="gradient-text">Experience</span>.</h2>
-  </div>
-
-  {% if experiences %}
-  <div class="timeline">
+{# ---------- EXPERIENCE ---------- #}
+{% if experiences %}
+<section id="experience" class="block">
+  <h2 class="block__label">Experience</h2>
+  <ul class="list">
     {% for exp in experiences %}
-    <article class="timeline__item reveal">
-      <div class="timeline__marker"></div>
-      <div class="timeline__card card">
-        <div class="timeline__head">
-          <div>
-            <h3 class="timeline__role">{{ exp.role }}</h3>
-            <p class="timeline__company">
-              {% if exp.company_url %}<a href="{{ exp.company_url }}" target="_blank" rel="noopener">{{ exp.company }}</a>{% else %}{{ exp.company }}{% endif %}
-              {% if exp.location %}· {{ exp.location }}{% endif %}
-            </p>
-          </div>
-          <div class="timeline__dates">
-            <span class="chip">{{ exp.get_employment_type_display }}</span>
-            <p>{{ exp.start_date|date:"M Y" }} — {% if exp.is_current %}Present{% else %}{{ exp.end_date|date:"M Y" }}{% endif %}</p>
-          </div>
-        </div>
-        <p class="timeline__summary">{{ exp.summary }}</p>
-        {% if exp.get_responsibilities_list %}
-        <ul class="timeline__list">
-          {% for item in exp.get_responsibilities_list %}<li>{{ item }}</li>{% endfor %}
-        </ul>
-        {% endif %}
-        {% if exp.get_technologies_list %}
-        <div class="project-card__stack">
-          {% for tech in exp.get_technologies_list %}<span class="tech-chip">{{ tech }}</span>{% endfor %}
-        </div>
-        {% endif %}
+    <li class="item">
+      <div class="item__head">
+        <span class="item__title">{{ exp.role }} · {{ exp.company }}</span>
+        <span class="item__meta">{{ exp.start_date|date:"Y" }}–{% if exp.is_current %}now{% else %}{{ exp.end_date|date:"Y" }}{% endif %}</span>
       </div>
-    </article>
+      <p class="item__desc">{{ exp.summary }}</p>
+    </li>
     {% endfor %}
-  </div>
-  {% else %}
-  <div class="empty-state card reveal">
-    <p>No experience added yet. Add entries from the <a href="/admin/experience/">Django admin</a>.</p>
-  </div>
-  {% endif %}
+  </ul>
 </section>
+{% endif %}
 
-{# ========== EDUCATION ========== #}
-<section id="education" class="section shell">
-  <div class="section-head reveal">
-    <span class="eyebrow">Education</span>
-    <h2 class="section-title">Academic <span class="gradient-text">Background</span>.</h2>
-  </div>
-
-  {% if educations %}
-  <div class="education-grid">
+{# ---------- EDUCATION ---------- #}
+{% if educations %}
+<section class="block">
+  <h2 class="block__label">Education</h2>
+  <ul class="list">
     {% for edu in educations %}
-    <article class="education-card card reveal">
-      <div class="education-card__head">
-        <div>
-          <h3 class="education-card__degree">{{ edu.degree }}</h3>
-          {% if edu.field_of_study %}<p class="education-card__field">{{ edu.field_of_study }}</p>{% endif %}
-        </div>
-        {% if edu.grade %}<span class="chip">{{ edu.grade }}</span>{% endif %}
+    <li class="item">
+      <div class="item__head">
+        <span class="item__title">{{ edu.degree }}{% if edu.field_of_study %} · {{ edu.field_of_study }}{% endif %}</span>
+        {% if edu.end_date %}<span class="item__meta">{{ edu.end_date|date:"Y" }}</span>{% endif %}
       </div>
-      <p class="education-card__institution">
-        {{ edu.institution }}{% if edu.location %} · {{ edu.location }}{% endif %}
-      </p>
-      <p class="education-card__dates">
-        {% if edu.start_date %}{{ edu.start_date|date:"M Y" }} — {% endif %}{% if edu.end_date %}{{ edu.end_date|date:"M Y" }}{% else %}Present{% endif %}
-      </p>
-      {% if edu.description %}<p class="education-card__desc">{{ edu.description }}</p>{% endif %}
-    </article>
+      <p class="item__desc">{{ edu.institution }}{% if edu.location %} · {{ edu.location }}{% endif %}</p>
+    </li>
     {% endfor %}
-  </div>
-  {% else %}
-  <div class="empty-state card reveal">
-    <p>No education added yet. Add entries from the <a href="/admin/experience/education/">Django admin</a>.</p>
-  </div>
-  {% endif %}
+  </ul>
 </section>
+{% endif %}
 
-{# ========== CTA ========== #}
-<section class="section shell">
-  <div class="cta card reveal">
-    <span class="eyebrow">Let's Build Something</span>
-    <h2 class="section-title">Have a project in mind? <span class="gradient-text">Let's talk.</span></h2>
-    <p class="section-lead">Open to Full-Stack Developer, Python Developer, and Machine Learning Engineer roles — as well as interesting freelance collaborations.</p>
-    <div class="hero__actions">
-      <a class="btn btn-primary" href="{% url 'contact:contact' %}">Start a Conversation →</a>
-      {% if site_settings.email %}<a class="btn btn-ghost" href="mailto:{{ site_settings.email }}">{{ site_settings.email }}</a>{% endif %}
-    </div>
-  </div>
+{# ---------- WRITING ---------- #}
+{% if posts %}
+<section id="writing" class="block">
+  <h2 class="block__label">Writing</h2>
+  <ul class="list">
+    {% for post in posts %}
+    <li class="item">
+      <div class="item__head">
+        <a class="item__title" href="{{ post.get_absolute_url }}"{% if post.is_external %} target="_blank" rel="noopener"{% endif %}>{{ post.title }}{% if post.is_external %} ↗{% endif %}</a>
+        <span class="item__meta">{{ post.date|date:"M Y" }}</span>
+      </div>
+      {% if post.excerpt %}<p class="item__desc">{{ post.excerpt }}</p>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{# ---------- CONTACT ---------- #}
+<section class="block">
+  <h2 class="block__label">Get in touch</h2>
+  <p class="item__desc">
+    Open to full-stack and machine-learning roles, and interesting freelance work.
+    Reach me at <a href="mailto:{{ site_settings.email }}">{{ site_settings.email }}</a>
+    or through the <a href="{% url 'contact:contact' %}">contact form</a>.
+  </p>
 </section>
 
 {% endblock %}

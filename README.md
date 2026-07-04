@@ -1,6 +1,6 @@
 # Portfolio — Lalu Yashwanth
 
-A premium, ATS-optimized personal portfolio built with **Django 5**. All content is managed through the Django admin — projects, skills, experience, and contact submissions are stored in the database, not hardcoded. Features a custom-built UI with light/dark mode, animated aurora gradients, scroll-reveal animations, and a fully responsive layout.
+A minimal, typography-first personal portfolio built with **Django 5**. All content is managed through the Django admin — projects, skills, experience, and contact submissions are stored in the database, not hardcoded. The front-end is intentionally simple: a single dark theme, one font, one narrow column, and no animations or gradients. The words do the work.
 
 **Live tech showcase:** Python · Django · PostgreSQL · REST APIs · Machine Learning · Hyderabad, India
 
@@ -8,16 +8,15 @@ A premium, ATS-optimized personal portfolio built with **Django 5**. All content
 
 ## ✨ Features
 
-- **Dynamic content** — every section (hero, projects, skills, experience) is database-driven and editable through Django admin
-- **Premium UI** — custom design system with blue/indigo/violet brand gradient, glass-morphism cards, animated aurora background
-- **Light + dark mode** — system-preference detection with localStorage persistence and smooth transitions
-- **Responsive** — mobile-first with hamburger nav, fluid typography, and breakpoint-tuned grids
-- **Accessible** — semantic HTML, ARIA labels, `prefers-reduced-motion` support, keyboard-friendly
-- **SEO-ready** — meta tags, Open Graph, semantic structure, ATS-optimized keyword content
+- **Dynamic content** — every section (intro, projects, experience, education) is database-driven and editable through Django admin
+- **Minimal UI** — single dark theme, one font (Inter), one narrow column, hairline borders, no gradients/cards/animation
+- **Fast & lightweight** — no client-side JavaScript, no icon libraries, one small stylesheet
+- **Responsive** — fluid single-column layout that reads well on any screen
+- **Accessible** — semantic HTML, `prefers-reduced-motion` support, keyboard-friendly
+- **SEO-ready** — meta tags, Open Graph, canonical URLs, semantic structure
 - **Contact form** — SMTP delivery with HTML + plain text emails, spam honeypot, submission tracking in admin
-- **Project case studies** — full detail pages with overview, problem, solution, impact, features, gallery, sidebar
-- **Filterable project list** — pill-tab category filter
-- **Animated typing** in hero, scroll-reveal animations, hover-lift on cards
+- **Project case studies** — clean detail pages with overview, problem, solution, impact, features, gallery
+- **Social links** — Twitter/X, LinkedIn, GitHub, and email in the footer of every page
 - **Seed command** — populate the entire site with one command
 
 ---
@@ -28,7 +27,7 @@ A premium, ATS-optimized personal portfolio built with **Django 5**. All content
 |---|---|
 | **Backend** | Python 3.11+, Django 5 |
 | **Database** | SQLite (dev) · PostgreSQL (prod) |
-| **Frontend** | Django Templates, vanilla JavaScript, custom CSS (no framework) |
+| **Frontend** | Django Templates, custom CSS (no framework, no JavaScript) |
 | **Email** | Django SMTP backend |
 | **Static files** | WhiteNoise |
 | **Deployment** | Gunicorn · Heroku / Railway / Render / VPS |
@@ -51,15 +50,12 @@ portfolio/
 │   ├── experience/          # Experience, Education
 │   └── contact/             # ContactSubmission, contact form, SMTP email
 ├── templates/
-│   ├── base.html            # Shell with nav, theme toggle, footer
-│   ├── core/home.html       # Full home page
-│   ├── projects/list.html   # Filterable project listing
+│   ├── base.html            # Shell: name, nav, footer with social links
+│   ├── core/home.html       # Single-page home (intro, work, experience, education)
 │   ├── projects/detail.html # Case-study detail page
 │   └── contact/             # Contact page + email templates
 ├── static/
-│   ├── css/style.css        # Premium design system (~1300 lines)
-│   ├── js/app.js            # Theme toggle, reveals, typing animation
-│   └── images/
+│   └── css/style.css        # Minimal dark design system (~250 lines, no JS)
 ├── media/                   # User-uploaded project images
 ├── manage.py
 ├── requirements.txt
@@ -230,19 +226,20 @@ Then put Nginx in front of Gunicorn for SSL and static file serving.
 
 ## 🎨 Customizing the Design
 
-Colors, spacing, and effects are CSS variables in `static/css/style.css`:
+Colors, spacing, and the content width are CSS variables at the top of `static/css/style.css`:
 
 ```css
 :root {
-  --brand-1: #1f67ff;       /* primary blue */
-  --brand-2: #4f46e5;       /* indigo */
-  --brand-3: #8b5cf6;       /* violet accent */
-  --brand-grad: linear-gradient(135deg, #1f67ff 0%, #4f46e5 50%, #8b5cf6 100%);
-  /* ... */
+  --bg:     #0e0f11;   /* near-black background */
+  --text:   #e8e9eb;   /* primary text / links   */
+  --muted:  #9aa0a8;   /* body copy, secondary   */
+  --faint:  #6b7178;   /* meta, dates, captions  */
+  --border: #22252a;   /* hairlines              */
+  --max:    660px;     /* content column width   */
 }
 ```
 
-Change those three brand colors and the entire site retheme.
+Adjust these six tokens and the whole site re-themes. Keeping it near-monochrome is what preserves the minimal look.
 
 ---
 

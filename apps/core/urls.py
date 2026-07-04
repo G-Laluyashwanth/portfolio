@@ -5,4 +5,5 @@ app_name = 'core'
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('writing/<slug:slug>/', views.post_detail, name='post'),
 ]

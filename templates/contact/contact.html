@@ -1,89 +1,58 @@
 {% extends 'base.html' %}
-{% block title %}Contact | {{ site_name }}{% endblock %}
-{% block meta_description %}Get in touch with {{ site_name }} — Full-Stack Developer specializing in Python, Django, and Machine Learning.{% endblock %}
+{% block title %}Contact — {{ site_name }}{% endblock %}
+{% block meta_description %}Get in touch with {{ site_name }}.{% endblock %}
 
 {% block content %}
-<section class="shell section">
-  <div class="contact-page">
-    <div class="contact-page__intro reveal">
-      <span class="eyebrow">Get in Touch</span>
-      <h1 class="section-title">Let's <span class="gradient-text">Build Something</span> Together.</h1>
-      <p class="section-lead">
-        Open to Full-Stack Developer, Python Developer, and Machine Learning Engineer roles —
-        as well as freelance projects, technical consulting, and interesting collaborations.
-      </p>
+<section class="intro">
+  <p class="intro__lead">
+    Open to full-stack and machine-learning roles, freelance projects, and interesting
+    collaborations. Send a message below, or email
+    <a href="mailto:{{ site_settings.email }}">{{ site_settings.email }}</a>.
+  </p>
+</section>
 
-      <ul class="contact-meta">
-        {% if site_settings.email %}
-        <li>
-          <span class="contact-meta__label">Email</span>
-          <a href="mailto:{{ site_settings.email }}">{{ site_settings.email }}</a>
-        </li>
-        {% endif %}
-        {% if site_settings.location %}
-        <li>
-          <span class="contact-meta__label">Location</span>
-          <span>{{ site_settings.location }}</span>
-        </li>
-        {% endif %}
-        {% if site_settings.linkedin_url %}
-        <li>
-          <span class="contact-meta__label">LinkedIn</span>
-          <a href="{{ site_settings.linkedin_url }}" target="_blank" rel="noopener">View Profile ↗</a>
-        </li>
-        {% endif %}
-        {% if site_settings.github_url %}
-        <li>
-          <span class="contact-meta__label">GitHub</span>
-          <a href="{{ site_settings.github_url }}" target="_blank" rel="noopener">View Profile ↗</a>
-        </li>
-        {% endif %}
-      </ul>
+<section class="block">
+  <h2 class="block__label">Send a message</h2>
+
+  {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert--{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="post" novalidate class="form">
+    {% csrf_token %}
+
+    {# Honeypot — hidden from humans #}
+    <div style="position:absolute;left:-9999px;" aria-hidden="true">{{ form.website }}</div>
+
+    <div class="field">
+      <label for="{{ form.name.id_for_label }}">Name</label>
+      {{ form.name }}
+      {% if form.name.errors %}<p class="form-error">{{ form.name.errors|join:" " }}</p>{% endif %}
     </div>
 
-    <div class="contact-page__form-wrap card reveal">
-      {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert--{{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
-
-      <form method="post" novalidate class="contact-form">
-        {% csrf_token %}
-
-        {# Honeypot — hidden from humans #}
-        <div style="position:absolute;left:-9999px;" aria-hidden="true">
-          {{ form.website }}
-        </div>
-
-        <div class="form-row">
-          <div class="form-field">
-            <label for="{{ form.name.id_for_label }}">Name</label>
-            {{ form.name }}
-            {% if form.name.errors %}<p class="form-error">{{ form.name.errors|join:" " }}</p>{% endif %}
-          </div>
-          <div class="form-field">
-            <label for="{{ form.email.id_for_label }}">Email</label>
-            {{ form.email }}
-            {% if form.email.errors %}<p class="form-error">{{ form.email.errors|join:" " }}</p>{% endif %}
-          </div>
-        </div>
-
-        <div class="form-field">
-          <label for="{{ form.subject.id_for_label }}">Subject</label>
-          {{ form.subject }}
-          {% if form.subject.errors %}<p class="form-error">{{ form.subject.errors|join:" " }}</p>{% endif %}
-        </div>
-
-        <div class="form-field">
-          <label for="{{ form.message.id_for_label }}">Message</label>
-          {{ form.message }}
-          {% if form.message.errors %}<p class="form-error">{{ form.message.errors|join:" " }}</p>{% endif %}
-        </div>
-
-        <button type="submit" class="btn btn-primary">Send Message →</button>
-      </form>
+    <div class="field">
+      <label for="{{ form.email.id_for_label }}">Email</label>
+      {{ form.email }}
+      {% if form.email.errors %}<p class="form-error">{{ form.email.errors|join:" " }}</p>{% endif %}
     </div>
-  </div>
+
+    <div class="field">
+      <label for="{{ form.subject.id_for_label }}">Subject</label>
+      {{ form.subject }}
+      {% if form.subject.errors %}<p class="form-error">{{ form.subject.errors|join:" " }}</p>{% endif %}
+    </div>
+
+    <div class="field">
+      <label for="{{ form.message.id_for_label }}">Message</label>
+      {{ form.message }}
+      {% if form.message.errors %}<p class="form-error">{{ form.message.errors|join:" " }}</p>{% endif %}
+    </div>
+
+    <div>
+      <button type="submit" class="btn">Send message</button>
+    </div>
+  </form>
 </section>
 {% endblock %}

@@ -1,4 +1,7 @@
 from django.db import models
+from django.urls import reverse
+from django.utils import timezone
+from django.utils.text import slugify
 
 
 class SiteSettings(models.Model):
@@ -21,6 +24,7 @@ class SiteSettings(models.Model):
     location = models.CharField(max_length=120, default='Hyderabad, India')
     github_url = models.URLField(blank=True, default='https://github.com/G-Laluyashwanth')
     linkedin_url = models.URLField(blank=True, default='https://linkedin.com/in/laluyashwanth')
+    twitter_url = models.URLField(blank=True, default='', help_text='Full URL to your Twitter/X profile.')
     resume = models.FileField(upload_to='resume/', blank=True, null=True)
 
     updated_at = models.DateTimeField(auto_now=True)
@@ -53,10 +57,6 @@ class HeroSection(models.Model):
         default='3+ years of professional experience designing enterprise-grade systems, '
                 'RESTful APIs, and data-driven applications. Currently expanding into ML and Deep Learning.'
     )
-    typing_phrases = models.TextField(
-        default="Full-Stack Developer\nPython & Django Engineer\nMachine Learning Enthusiast\nAPI Architect",
-        help_text='One phrase per line — used by the typing animation in the hero.'
-    )
     cta_primary_label = models.CharField(max_length=60, default='View Projects')
     cta_primary_url = models.CharField(max_length=200, default='#projects')
     cta_secondary_label = models.CharField(max_length=60, default='Get in Touch')
@@ -70,5 +70,31 @@ class HeroSection(models.Model):
     def __str__(self):
         return self.headline[:60]
 
-    def get_typing_phrases_list(self):
-        return [line.strip() for line in self.typing_phrases.splitlines() if line.strip()]
+
+class Post(models.Model):
+    """A short writing/notes entry. Links to an internal page, or out via external_url."""
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=220, unique=True, blank=True)
+    date = models.DateField(default=timezone.now)
+    excerpt = models.CharField(max_length=280, blank=True, help_text='One-line summary shown in the list.')
+    content = models.TextField(blank=True, help_text='Body of the post. Leave blank if using an external link.')
+    external_url = models.URLField(blank=True, help_text='If set, the post links here instead of an internal page.')
+    is_published = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['-date']
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return self.external_url or reverse('core:post', kwargs={'slug': self.slug})
+
+    @property
+    def is_external(self):
+        return bool(self.external_url)

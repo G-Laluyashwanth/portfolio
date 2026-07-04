@@ -7,7 +7,7 @@ from datetime import date
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
-from apps.core.models import SiteSettings, HeroSection
+from apps.core.models import SiteSettings, HeroSection, Post
 from apps.projects.models import Project, TechStack, ProjectFeature
 from apps.skills.models import SkillCategory, Skill
 from apps.experience.models import Experience, Education
@@ -33,6 +33,7 @@ class Command(BaseCommand):
             Experience.objects.all().delete()
             Education.objects.all().delete()
             HeroSection.objects.all().delete()
+            Post.objects.all().delete()
 
         self.stdout.write('Seeding site settings...')
         self._seed_site_settings()
@@ -55,6 +56,9 @@ class Command(BaseCommand):
         self.stdout.write('Seeding education...')
         self._seed_education()
 
+        self.stdout.write('Seeding writing...')
+        self._seed_writing()
+
         self.stdout.write(self.style.SUCCESS('\n✓ Portfolio seeded successfully!'))
         self.stdout.write('  Visit / to see the home page')
         self.stdout.write('  Visit /admin/ to manage content')
@@ -63,7 +67,7 @@ class Command(BaseCommand):
     def _seed_site_settings(self):
         s = SiteSettings.load()
         s.site_name = 'Lalu Yashwanth'
-        s.tagline = 'Full-Stack Developer | Python & Django Engineer | ML Enthusiast'
+        s.tagline = 'Full-Stack Developer · Python, Django & Machine Learning'
         s.meta_description = (
             'Full-Stack Software Developer with 3+ years of experience building '
             'enterprise-grade web applications with Python, Django, PostgreSQL, '
@@ -75,9 +79,10 @@ class Command(BaseCommand):
             'TensorFlow, Pandas, NumPy, Hyderabad, India, Lalu Yashwanth'
         )
         s.email = 'laluyashwanth.dev@gmail.com'
-        s.location = 'Hyderabad, Telangana, India'
+        s.location = 'Hyderabad, India'
         s.github_url = 'https://github.com/G-Laluyashwanth'
         s.linkedin_url = 'https://linkedin.com/in/laluyashwanth'
+        s.twitter_url = 'https://x.com/laluyashwanth'  # TODO: update to your real handle
         s.save()
 
     def _seed_hero(self):
@@ -86,16 +91,10 @@ class Command(BaseCommand):
             eyebrow='Full-Stack Developer · Python · Django · ML',
             headline='Building scalable web applications with Python, Django, and Machine Learning.',
             subheadline=(
-                '3+ years of professional experience designing enterprise-grade systems, '
-                'RESTful APIs, and automation tools. Currently expanding into Deep Learning '
-                'and TensorFlow to integrate predictive features into production applications.'
-            ),
-            typing_phrases=(
-                'Full-Stack Developer\n'
-                'Python & Django Engineer\n'
-                'PostgreSQL Architect\n'
-                'REST API Designer\n'
-                'Machine Learning Enthusiast'
+                'I build full-stack systems with Python and Django — enterprise web apps, '
+                'REST APIs, and automation tools that remove hours of manual work. Lately I have '
+                'been drawn to the seam where clean engineering meets machine learning, and what '
+                'becomes possible when software can learn instead of just follow rules.'
             ),
             cta_primary_label='View Projects',
             cta_primary_url='#projects',
@@ -565,4 +564,24 @@ class Command(BaseCommand):
             grade='A Grade',
             description='',
             order=2,
+        )
+
+    # -----------------------------------------------------------------
+    def _seed_writing(self):
+        Post.objects.all().delete()
+        Post.objects.create(
+            title='Moving from full-stack into machine learning',
+            excerpt=(
+                'Why I am shifting focus, what I am learning, and how I think about the '
+                'overlap between solid engineering and ML.'
+            ),
+            content=(
+                'This is a starter note — replace or delete it from the Django admin '
+                '(Core → Posts).\n\n'
+                'After a few years building production Django systems, I have been going '
+                'deeper into machine learning. The goal is to build software that can learn '
+                'from data, not just follow hand-written rules — and to keep the same '
+                'engineering discipline while doing it.'
+            ),
+            is_published=True,
         )

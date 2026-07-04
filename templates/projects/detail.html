@@ -1,178 +1,107 @@
 {% extends 'base.html' %}
-{% load static %}
 
-{% block title %}{{ project.title }} | {{ site_name }}{% endblock %}
+{% block title %}{{ project.title }} — {{ site_name }}{% endblock %}
 {% block meta_description %}{{ project.short_description }}{% endblock %}
 
 {% block content %}
-<article class="case-study">
+<article class="case">
 
-  {# ===== HERO ===== #}
-  <header class="case-hero shell reveal">
-    <div class="case-hero__top">
-      <span class="chip">{{ project.get_category_display }}</span>
-      {% if project.company %}<span class="case-hero__company">{{ project.company }}</span>{% endif %}
-      {% if project.role %}<span class="case-hero__role">· {{ project.role }}</span>{% endif %}
-    </div>
+  <p class="case__meta">
+    {{ project.get_category_display }}{% if project.company %} · {{ project.company }}{% endif %}{% if project.role %} · {{ project.role }}{% endif %}
+  </p>
+  <h1 class="case__title">{{ project.title }}</h1>
+  <p class="case__lead">{{ project.short_description }}</p>
 
-    <h1 class="case-hero__title">{{ project.title }}</h1>
-    <p class="case-hero__lead">{{ project.short_description }}</p>
+  <p class="case__meta" style="margin-top:16px;">
+    {% if project.start_date %}{{ project.start_date|date:"M Y" }} – {% if project.is_ongoing %}Present{% else %}{{ project.end_date|date:"M Y" }}{% endif %}{% endif %}
+  </p>
 
-    <div class="case-hero__meta">
-      {% if project.start_date %}
-      <div class="case-meta-item">
-        <span class="case-meta-item__label">Timeline</span>
-        <span class="case-meta-item__value">
-          {{ project.start_date|date:"M Y" }} —
-          {% if project.is_ongoing %}Present{% else %}{{ project.end_date|date:"M Y" }}{% endif %}
-        </span>
-      </div>
-      {% endif %}
-      {% if project.tech_stack.all %}
-      <div class="case-meta-item">
-        <span class="case-meta-item__label">Stack</span>
-        <span class="case-meta-item__value">{{ project.tech_stack.count }} technologies</span>
-      </div>
-      {% endif %}
-      {% if project.live_url or project.github_url %}
-      <div class="case-meta-item case-meta-item--actions">
-        {% if project.live_url %}<a class="btn btn-primary" href="{{ project.live_url }}" target="_blank" rel="noopener">View Live ↗</a>{% endif %}
-        {% if project.github_url %}<a class="btn btn-ghost" href="{{ project.github_url }}" target="_blank" rel="noopener">Source ↗</a>{% endif %}
-      </div>
-      {% endif %}
-    </div>
-  </header>
+  {% if project.live_url or project.github_url %}
+  <p class="case__links">
+    {% if project.live_url %}<a href="{{ project.live_url }}" target="_blank" rel="noopener">View live →</a>{% endif %}
+    {% if project.github_url %}<a href="{{ project.github_url }}" target="_blank" rel="noopener">Source →</a>{% endif %}
+  </p>
+  {% endif %}
 
-  {# ===== COVER IMAGE ===== #}
   {% if project.cover_image %}
-  <div class="shell reveal">
-    <div class="case-cover card">
-      <img src="{{ project.cover_image.url }}" alt="{{ project.title }}" />
-    </div>
+  <div class="case__cover">
+    <img src="{{ project.cover_image.url }}" alt="{{ project.title }}" />
   </div>
   {% endif %}
 
-  {# ===== BODY ===== #}
-  <div class="shell case-body">
+  <section class="block">
+    <h2 class="block__label">Overview</h2>
+    <div class="prose">{{ project.description|linebreaks }}</div>
+  </section>
 
-    <div class="case-content reveal">
-      <section class="case-section">
-        <h2 class="case-section__title">Overview</h2>
-        <div class="case-section__prose">
-          {{ project.description|linebreaks }}
-        </div>
-      </section>
+  {% if project.problem %}
+  <section class="block">
+    <h2 class="block__label">The problem</h2>
+    <div class="prose">{{ project.problem|linebreaks }}</div>
+  </section>
+  {% endif %}
 
-      {% if project.problem %}
-      <section class="case-section">
-        <h2 class="case-section__title">The Problem</h2>
-        <div class="case-section__prose">{{ project.problem|linebreaks }}</div>
-      </section>
-      {% endif %}
+  {% if project.solution %}
+  <section class="block">
+    <h2 class="block__label">The solution</h2>
+    <div class="prose">{{ project.solution|linebreaks }}</div>
+  </section>
+  {% endif %}
 
-      {% if project.solution %}
-      <section class="case-section">
-        <h2 class="case-section__title">The Solution</h2>
-        <div class="case-section__prose">{{ project.solution|linebreaks }}</div>
-      </section>
-      {% endif %}
+  {% if project.impact %}
+  <section class="block">
+    <h2 class="block__label">Impact</h2>
+    <div class="prose">{{ project.impact|linebreaks }}</div>
+  </section>
+  {% endif %}
 
-      {% if project.impact %}
-      <section class="case-section">
-        <h2 class="case-section__title">Impact &amp; Outcomes</h2>
-        <div class="case-section__prose">{{ project.impact|linebreaks }}</div>
-      </section>
-      {% endif %}
+  {% if project.features.all %}
+  <section class="block">
+    <h2 class="block__label">Key features</h2>
+    <ul class="case__features">
+      {% for feature in project.features.all %}<li>{{ feature.text }}</li>{% endfor %}
+    </ul>
+  </section>
+  {% endif %}
 
-      {% if project.features.all %}
-      <section class="case-section">
-        <h2 class="case-section__title">Key Features</h2>
-        <ul class="case-features">
-          {% for feature in project.features.all %}
-          <li>
-            <span class="case-features__bullet"></span>
-            {{ feature.text }}
-          </li>
-          {% endfor %}
-        </ul>
-      </section>
-      {% endif %}
+  {% if project.tech_stack.all %}
+  <section class="block">
+    <h2 class="block__label">Built with</h2>
+    <p class="case__tech">{% for tech in project.tech_stack.all %}{{ tech.name }}{% if not forloop.last %} · {% endif %}{% endfor %}</p>
+  </section>
+  {% endif %}
 
-      {% if project.images.all %}
-      <section class="case-section">
-        <h2 class="case-section__title">Gallery</h2>
-        <div class="case-gallery">
-          {% for img in project.images.all %}
-          <figure class="case-gallery__item card">
-            <img src="{{ img.image.url }}" alt="{{ img.caption|default:project.title }}" loading="lazy" />
-            {% if img.caption %}<figcaption>{{ img.caption }}</figcaption>{% endif %}
-          </figure>
-          {% endfor %}
-        </div>
-      </section>
-      {% endif %}
-    </div>
-
-    {# Sidebar #}
-    <aside class="case-sidebar reveal">
-      {% if project.tech_stack.all %}
-      <div class="case-sidebar__block card">
-        <h3>Tech Stack</h3>
-        <div class="project-card__stack">
-          {% for tech in project.tech_stack.all %}<span class="tech-chip">{{ tech.name }}</span>{% endfor %}
-        </div>
-      </div>
-      {% endif %}
-
-      <div class="case-sidebar__block card">
-        <h3>Project Info</h3>
-        <dl class="case-info">
-          {% if project.company %}<dt>Company</dt><dd>{{ project.company }}</dd>{% endif %}
-          {% if project.role %}<dt>Role</dt><dd>{{ project.role }}</dd>{% endif %}
-          <dt>Category</dt><dd>{{ project.get_category_display }}</dd>
-          {% if project.start_date %}
-          <dt>Started</dt><dd>{{ project.start_date|date:"M Y" }}</dd>
-          {% endif %}
-          {% if not project.is_ongoing and project.end_date %}
-          <dt>Completed</dt><dd>{{ project.end_date|date:"M Y" }}</dd>
-          {% endif %}
-        </dl>
-      </div>
-
-      {% if site_settings.email %}
-      <div class="case-sidebar__block card case-sidebar__cta">
-        <h3>Interested in similar work?</h3>
-        <p>Available for full-stack and Python development projects.</p>
-        <a class="btn btn-primary" href="{% url 'contact:contact' %}">Get in Touch</a>
-      </div>
-      {% endif %}
-    </aside>
-  </div>
-
-  {# ===== RELATED ===== #}
-  {% if related_projects %}
-  <section class="shell section">
-    <div class="section-head reveal">
-      <span class="eyebrow">Keep Exploring</span>
-      <h2 class="section-title">Other <span class="gradient-text">Projects</span></h2>
-    </div>
-    <div class="project-grid">
-      {% for related in related_projects %}
-      <article class="project-card card reveal">
-        <div class="project-card__body">
-          <div class="project-card__meta">
-            <span class="chip">{{ related.get_category_display }}</span>
-          </div>
-          <h3 class="project-card__title">{{ related.title }}</h3>
-          <p class="project-card__desc">{{ related.short_description }}</p>
-          <div class="project-card__actions">
-            <a href="{{ related.get_absolute_url }}" class="project-card__link">View →</a>
-          </div>
-        </div>
-      </article>
+  {% if project.images.all %}
+  <section class="block">
+    <h2 class="block__label">Gallery</h2>
+    <div class="case__gallery">
+      {% for img in project.images.all %}
+      <figure>
+        <img src="{{ img.image.url }}" alt="{{ img.caption|default:project.title }}" loading="lazy" />
+        {% if img.caption %}<figcaption>{{ img.caption }}</figcaption>{% endif %}
+      </figure>
       {% endfor %}
     </div>
   </section>
   {% endif %}
+
+  {% if related_projects %}
+  <section class="block">
+    <h2 class="block__label">More projects</h2>
+    <ul class="list">
+      {% for related in related_projects %}
+      <li class="item">
+        <div class="item__head">
+          <a class="item__title" href="{{ related.get_absolute_url }}">{{ related.title }}</a>
+        </div>
+        <p class="item__desc">{{ related.short_description }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  <p class="case__links" style="margin-top:56px;"><a href="{% url 'core:home' %}#projects">← Back to projects</a></p>
+
 </article>
 {% endblock %}
