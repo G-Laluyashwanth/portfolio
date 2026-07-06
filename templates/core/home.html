@@ -24,6 +24,7 @@
         <a class="item__title" href="{{ project.get_absolute_url }}">{{ project.title }}</a>
       </div>
       <p class="item__desc">{{ project.short_description }}</p>
+      {% if project.impact_headline %}<p class="item__impact"><span class="item__impact-label">Impact</span>{{ project.impact_headline }}</p>{% endif %}
       <p class="item__links">
         <a href="{{ project.get_absolute_url }}">Case study →</a>
         {% if project.live_url %}<a href="{{ project.live_url }}" target="_blank" rel="noopener">Live</a>{% endif %}
@@ -105,13 +106,41 @@
 {% endif %}
 
 {# ---------- CONTACT ---------- #}
-<section class="block">
+<section id="contact" class="block">
   <h2 class="block__label">Get in touch</h2>
-  <p class="item__desc">
-    Open to full-stack and machine-learning roles, and interesting freelance work.
-    Reach me at <a href="mailto:{{ site_settings.email }}">{{ site_settings.email }}</a>
-    or through the <a href="{% url 'contact:contact' %}">contact form</a>.
-  </p>
+  <p class="item__desc">Open to full-stack and machine-learning roles, and interesting freelance work.</p>
+  <div class="contact-cards">
+    {% if site_settings.email %}
+    <a class="contact-card" href="mailto:{{ site_settings.email }}">
+      <span class="contact-card__label">Email</span>
+      <span class="contact-card__value">{{ site_settings.email }}</span>
+    </a>
+    {% endif %}
+    {% if site_settings.linkedin_url %}
+    <a class="contact-card" href="{{ site_settings.linkedin_url }}" target="_blank" rel="noopener">
+      <span class="contact-card__label">LinkedIn</span>
+      <span class="contact-card__value">{{ site_settings.linkedin_url|cut:"https://"|cut:"http://" }}</span>
+    </a>
+    {% endif %}
+    {% if site_settings.github_url %}
+    <a class="contact-card" href="{{ site_settings.github_url }}" target="_blank" rel="noopener">
+      <span class="contact-card__label">GitHub</span>
+      <span class="contact-card__value">{{ site_settings.github_url|cut:"https://"|cut:"http://" }}</span>
+    </a>
+    {% endif %}
+    {% if site_settings.twitter_url %}
+    <a class="contact-card" href="{{ site_settings.twitter_url }}" target="_blank" rel="noopener">
+      <span class="contact-card__label">Twitter / X</span>
+      <span class="contact-card__value">{{ site_settings.twitter_url|cut:"https://"|cut:"http://" }}</span>
+    </a>
+    {% endif %}
+    {% if site_settings.resume %}
+    <a class="contact-card" href="{{ site_settings.resume.url }}" target="_blank" rel="noopener">
+      <span class="contact-card__label">Résumé</span>
+      <span class="contact-card__value">Download PDF</span>
+    </a>
+    {% endif %}
+  </div>
 </section>
 
 {% endblock %}

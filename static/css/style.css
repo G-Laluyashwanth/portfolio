@@ -5,6 +5,29 @@
    no animation. One column, one font, one accent.
    ============================================================ */
 
+/* ---------- self-hosted Inter (latin subset) ---------- */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/inter-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/inter-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../fonts/inter-600.woff2") format("woff2");
+}
+
 :root {
   --bg:      #0e0f11;   /* near-black background */
   --text:    #f4f5f7;   /* primary text / links */
@@ -12,7 +35,7 @@
   --faint:   #9aa1aa;   /* meta, dates, captions */
   --border:  #22252a;   /* hairlines */
   --link-underline: #4a4f57;
-  --dot:     rgba(255,255,255,0.26);  /* ambient background dots */
+  --dot:     rgba(255,255,255,0.14);  /* ambient background dots */
 
   --max: 700px;
   --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -55,6 +78,16 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
 }
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 20;
+  padding: 10px 14px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  text-decoration: none;
+}
+.skip-link:focus { left: 16px; top: 16px; }
 
 /* ---------- ambient background (subtle floating dots) ---------- */
 .dots {
@@ -155,6 +188,20 @@ a.item__title:hover { text-decoration: underline; text-decoration-color: var(--t
   color: var(--muted);
   font-size: 0.96rem;
 }
+.item__impact {
+  margin-top: 8px;
+  color: var(--text);
+  font-size: 0.92rem;
+}
+.item__impact-label {
+  display: inline-block;
+  margin-right: 9px;
+  color: var(--faint);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
 .item__links {
   margin-top: 10px;
   display: flex;
@@ -196,34 +243,36 @@ a.item__title:hover { text-decoration: underline; text-decoration-color: var(--t
 }
 .btn:hover { border-color: var(--faint); }
 
-/* ---------- contact form ---------- */
-.form { display: grid; gap: 20px; padding-top: 32px; max-width: 480px; }
-.field { display: grid; gap: 8px; }
-.field label { font-size: 0.88rem; color: var(--muted); }
-.form-input {
-  width: 100%;
-  padding: 11px 13px;
-  background: transparent;
+/* ---------- contact cards ---------- */
+.contact-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+.contact-card {
+  display: block;
+  padding: 16px 18px;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: border-color 120ms ease;
+}
+.contact-card:hover { border-color: var(--faint); }
+.contact-card__label {
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 5px;
+}
+.contact-card__value {
+  display: block;
   color: var(--text);
-  font: inherit;
-  font-size: 0.95rem;
+  font-size: 0.96rem;
+  word-break: break-word;
 }
-.form-input::placeholder { color: var(--faint); }
-.form-input:focus { outline: none; border-color: var(--faint); }
-textarea.form-input { resize: vertical; min-height: 140px; line-height: 1.6; }
-.form-error { font-size: 0.82rem; color: #e5807a; }
-.alert {
-  padding: 12px 14px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  font-size: 0.92rem;
-  margin-bottom: 20px;
-  color: var(--muted);
-}
-.alert--success { border-color: #2f5a3a; color: #a7d3b0; }
-.alert--error { border-color: #5a2f2f; color: #e5a7a7; }
 
 /* ---------- case study (project detail) ---------- */
 .case { padding-top: 40px; }

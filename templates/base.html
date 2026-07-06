@@ -12,6 +12,7 @@
   <meta name="description" content="{% block meta_description %}{{ site_settings.meta_description }}{% endblock %}" />
   <meta name="author" content="{{ site_name }}" />
   <link rel="canonical" href="{{ request.build_absolute_uri }}" />
+  {% if has_writing %}<link rel="alternate" type="application/rss+xml" title="{{ site_name }} — Writing" href="{% url 'feed' %}" />{% endif %}
 
   {# Open Graph #}
   <meta property="og:type" content="website" />
@@ -27,14 +28,18 @@
   <meta name="twitter:description" content="{{ site_settings.meta_description }}" />
   <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'og.png' %}" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  {# Structured data (Person) #}
+  {% if structured_data %}<script type="application/ld+json">{{ structured_data|safe }}</script>{% endif %}
+
+  {# Self-hosted Inter — preload the weights used above the fold #}
+  <link rel="preload" href="{% static 'fonts/inter-400.woff2' %}" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="{% static 'fonts/inter-600.woff2' %}" as="font" type="font/woff2" crossorigin />
 
   <link rel="stylesheet" href="{% static 'css/style.css' %}" />
   {% block extra_head %}{% endblock %}
 </head>
 <body>
+  <a class="skip-link" href="#top">Skip to content</a>
   <div class="dots" aria-hidden="true"></div>
 
   <header class="wrap site-header">
@@ -44,7 +49,7 @@
       <a href="{% url 'core:home' %}#experience">Experience</a>
       {% if has_writing %}<a href="{% url 'core:home' %}#writing">Writing</a>{% endif %}
       {% if site_settings.resume %}<a href="{{ site_settings.resume.url }}" target="_blank" rel="noopener">Résumé</a>{% endif %}
-      <a href="{% url 'contact:contact' %}">Contact</a>
+      <a href="{% url 'core:home' %}#contact">Contact</a>
     </nav>
   </header>
 

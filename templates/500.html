@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Something went wrong — {{ site_name }}{% endblock %}
+{% block content %}
+<section class="intro">
+  <p class="intro__role">500</p>
+  <p class="intro__lead">
+    Something broke on my end. Try again in a moment, or head back to the
+    <a href="{% url 'core:home' %}">home page</a>.
+  </p>
+</section>
+{% endblock %}
