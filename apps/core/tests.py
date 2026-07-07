@@ -1,4 +1,5 @@
 """Smoke and unit tests for the portfolio site."""
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
@@ -103,3 +104,21 @@ class SeoEndpointTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, 'Feed Post')
         self.assertIn('application/rss+xml', resp['Content-Type'])
+
+
+class AdminPanelTests(TestCase):
+    """Unfold admin should load for staff users."""
+
+    def setUp(self):
+        self.admin = User.objects.create_superuser('admin', 'admin@test.com', 'pass')
+
+    def test_admin_index_renders(self):
+        self.client.force_login(self.admin)
+        resp = self.client.get('/admin/')
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Portfolio')
+
+    def test_project_changelist_renders(self):
+        self.client.force_login(self.admin)
+        resp = self.client.get(reverse('admin:projects_project_changelist'))
+        self.assertEqual(resp.status_code, 200)

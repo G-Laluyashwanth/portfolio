@@ -19,6 +19,9 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=Csv(
 # Applications
 # ---------------------------------------------------------------------------
 DJANGO_APPS = [
+    'unfold',
+    'unfold.contrib.filters',
+    'unfold.contrib.forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -122,6 +125,68 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ---------------------------------------------------------------------------
+# Django Unfold — admin UI (structured sidebar, light/dark toggle)
+# ---------------------------------------------------------------------------
+from django.templatetags.static import static  # noqa: E402
+from config.admin import UNFOLD_SIDEBAR, dashboard_callback, environment_callback  # noqa: E402
+
+UNFOLD = {
+    'SITE_TITLE': 'Portfolio Admin',
+    'SITE_HEADER': 'Portfolio',
+    'SITE_SUBHEADER': 'Content management',
+    'SITE_URL': '/',
+    'SITE_ICON': {
+        'light': lambda request: static('admin-icon-light.svg'),
+        'dark': lambda request: static('favicon.svg'),
+    },
+    'SITE_FAVICONS': [
+        {
+            'rel': 'icon',
+            'sizes': '32x32',
+            'type': 'image/svg+xml',
+            'href': lambda request: static('favicon.svg'),
+        },
+    ],
+    'BORDER_RADIUS': '8px',
+    'SHOW_VIEW_ON_SITE': True,
+    'ENVIRONMENT': environment_callback,
+    'DASHBOARD_CALLBACK': dashboard_callback,
+    'SIDEBAR': {
+        'show_search': True,
+        'show_all_applications': False,
+        'navigation': UNFOLD_SIDEBAR,
+    },
+    'COLORS': {
+        'base': {
+            '50': '#f4f5f7',
+            '100': '#e8e9eb',
+            '200': '#c8cdd4',
+            '300': '#9aa1aa',
+            '400': '#6b7280',
+            '500': '#4a4f57',
+            '600': '#353940',
+            '700': '#22252a',
+            '800': '#16181c',
+            '900': '#0e0f11',
+            '950': '#080809',
+        },
+        'primary': {
+            '50': '#eef2ff',
+            '100': '#e0e7ff',
+            '200': '#c7d2fe',
+            '300': '#a5b4fc',
+            '400': '#818cf8',
+            '500': '#6366f1',
+            '600': '#4f46e5',
+            '700': '#4338ca',
+            '800': '#3730a3',
+            '900': '#312e81',
+            '950': '#1e1b4b',
+        },
+    },
+}
 
 # ---------------------------------------------------------------------------
 # Email (SMTP)
