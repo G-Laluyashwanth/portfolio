@@ -39,4 +39,7 @@ node_modules/
 # Cursor
 .cursor/
 
+# Private planning docs (not part of the public site)
+docs/*.docx
+
 ~$*

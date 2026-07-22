@@ -59,6 +59,10 @@ class Project(models.Model):
 
     live_url = models.URLField(blank=True)
     github_url = models.URLField(blank=True)
+    is_proprietary = models.BooleanField(
+        default=False,
+        help_text='If True and github_url is empty, show “Source private” on the site.',
+    )
 
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True, help_text='Leave blank for ongoing.')

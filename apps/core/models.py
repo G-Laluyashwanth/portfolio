@@ -60,7 +60,7 @@ class HeroSection(models.Model):
     cta_primary_label = models.CharField(max_length=60, default='View Projects')
     cta_primary_url = models.CharField(max_length=200, default='#projects')
     cta_secondary_label = models.CharField(max_length=60, default='Get in Touch')
-    cta_secondary_url = models.CharField(max_length=200, default='/contact/')
+    cta_secondary_url = models.CharField(max_length=200, default='#contact')
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -75,7 +75,7 @@ class Post(models.Model):
     """A short writing/notes entry. Links to an internal page, or out via external_url."""
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=220, unique=True, blank=True)
-    date = models.DateField(default=timezone.now)
+    date = models.DateField(default=timezone.localdate)
     excerpt = models.CharField(max_length=280, blank=True, help_text='One-line summary shown in the list.')
     content = models.TextField(blank=True, help_text='Body of the post. Leave blank if using an external link.')
     external_url = models.URLField(blank=True, help_text='If set, the post links here instead of an internal page.')

@@ -1,17 +1,25 @@
+from django.db.models import Prefetch
 from django.shortcuts import render, get_object_or_404
+
 from apps.projects.models import Project
-from apps.skills.models import SkillCategory
+from apps.skills.models import SkillCategory, Skill
 from apps.experience.models import Experience, Education
 from .models import Post
 
 
 def home(request):
     """Home page with all sections driven by the database."""
+    featured_skills = Prefetch(
+        'skills',
+        queryset=Skill.objects.filter(is_featured=True),
+    )
     context = {
         'featured_projects': Project.objects.filter(
             is_published=True, is_featured=True
         ).prefetch_related('tech_stack')[:6],
-        'skill_categories': SkillCategory.objects.prefetch_related('skills').all(),
+        'skill_categories': SkillCategory.objects.prefetch_related(
+            featured_skills
+        ).filter(skills__is_featured=True).distinct(),
         'experiences': Experience.objects.filter(is_published=True),
         'educations': Education.objects.all(),
         'posts': Post.objects.filter(is_published=True),

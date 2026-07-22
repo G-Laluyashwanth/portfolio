@@ -1,8 +1,8 @@
 /* ============================================================
    PORTFOLIO — MINIMAL (dark, typography-first)
    Author: Lalu Yashwanth
-   Philosophy: the words are the design. No gradients, no cards,
-   no animation. One column, one font, one accent.
+   Philosophy: the words are the design. Subtle ambient dots,
+   contact cards for actions, otherwise one column / one font.
    ============================================================ */
 
 /* ---------- self-hosted Inter (latin subset) ---------- */
@@ -68,15 +68,10 @@ a {
   transition: text-decoration-color 120ms ease, color 120ms ease;
 }
 a:hover { text-decoration-color: var(--text); }
-a:focus-visible, button:focus-visible, .btn:focus-visible {
+a:focus-visible, button:focus-visible {
   outline: 2px solid var(--faint);
   outline-offset: 3px;
   border-radius: 2px;
-}
-
-.sr-only {
-  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
 }
 .skip-link {
   position: absolute; left: -9999px; top: 0; z-index: 20;
@@ -144,12 +139,34 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
   font-size: 0.95rem;
   margin-bottom: 22px;
 }
+.intro__headline {
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-bottom: 16px;
+  max-width: 36ch;
+}
 .intro__lead {
   color: var(--muted);
   font-size: 1.05rem;
 }
 .intro__lead + .intro__lead { margin-top: 16px; }
 .intro__lead strong { color: var(--text); font-weight: 500; }
+.intro__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 22px;
+  margin-top: 22px;
+}
+.intro__ctas a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.intro__ctas a:hover {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: var(--text);
+}
 
 /* ---------- blocks / lists ---------- */
 .block { padding-top: 64px; }
@@ -210,6 +227,29 @@ a.item__title:hover { text-decoration: underline; text-decoration-color: var(--t
 }
 .item__links a { color: var(--muted); text-decoration: none; }
 .item__links a:hover { color: var(--text); text-decoration: underline; text-decoration-color: var(--text); }
+.item__muted {
+  color: var(--faint);
+  font-size: 0.85rem;
+}
+.item__bullets {
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+.item__bullets li {
+  color: var(--muted);
+  font-size: 0.92rem;
+  padding-left: 1em;
+  position: relative;
+}
+.item__bullets li::before {
+  content: "–";
+  position: absolute;
+  left: 0;
+  color: var(--faint);
+}
 
 /* ---------- footer ---------- */
 .site-footer {
@@ -226,22 +266,6 @@ a.item__title:hover { text-decoration: underline; text-decoration-color: var(--t
 .links-row a { color: var(--muted); text-decoration: none; font-size: 0.9rem; }
 .links-row a:hover { color: var(--text); }
 .site-footer__copy { color: var(--faint); font-size: 0.82rem; }
-
-/* ---------- buttons (kept minimal, text-like) ---------- */
-.btn {
-  display: inline-block;
-  padding: 10px 16px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: transparent;
-  color: var(--text);
-  font: inherit;
-  font-size: 0.92rem;
-  cursor: pointer;
-  text-decoration: none;
-  transition: border-color 120ms ease;
-}
-.btn:hover { border-color: var(--faint); }
 
 /* ---------- contact cards ---------- */
 .contact-cards {

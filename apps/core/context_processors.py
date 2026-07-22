@@ -1,5 +1,9 @@
 """Context processors injecting site-wide data into every template."""
 import json
+from pathlib import Path
+
+from django.conf import settings
+from django.templatetags.static import static
 
 from .models import SiteSettings, HeroSection, Post
 
@@ -21,6 +25,13 @@ def site_context(request):
     except Exception:
         has_writing = False
 
+    resume_url = ''
+    resume_static = getattr(settings, 'RESUME_STATIC', '')
+    if resume_static and (Path(settings.BASE_DIR) / 'static' / resume_static).exists():
+        resume_url = static(resume_static)
+    elif settings_obj and settings_obj.resume:
+        resume_url = settings_obj.resume.url
+
     structured_data = ''
     if settings_obj:
         same_as = [
@@ -30,20 +41,28 @@ def site_context(request):
                 settings_obj.twitter_url,
             ) if url
         ]
+        # Shorter job title for schema — first segment of the tagline.
+        job_title = (settings_obj.tagline or '').split('·')[0].strip() or settings_obj.tagline
         person = {
             '@context': 'https://schema.org',
             '@type': 'Person',
             'name': settings_obj.site_name,
-            'jobTitle': settings_obj.tagline,
+            'jobTitle': job_title,
             'url': request.build_absolute_uri('/'),
         }
         if settings_obj.email:
             person['email'] = settings_obj.email
         if settings_obj.location:
-            person['address'] = settings_obj.location
+            person['homeLocation'] = {
+                '@type': 'Place',
+                'name': settings_obj.location,
+            }
         if same_as:
             person['sameAs'] = same_as
         structured_data = json.dumps(person)
+
+    # Canonical without query string.
+    canonical = request.build_absolute_uri(request.path)
 
     return {
         'site_settings': settings_obj,
@@ -51,5 +70,7 @@ def site_context(request):
         'site_tagline': getattr(settings_obj, 'tagline', 'Full-Stack Developer'),
         'hero': hero,
         'has_writing': has_writing,
+        'resume_url': resume_url,
         'structured_data': structured_data,
+        'canonical_url': canonical,
     }

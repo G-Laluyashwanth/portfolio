@@ -4,16 +4,29 @@
 
 {# ---------- INTRO ---------- #}
 <section class="intro">
-  <p class="intro__role">{{ site_tagline }}{% if site_settings.location %} · {{ site_settings.location }}{% endif %}</p>
+  <p class="intro__role">{% if hero and hero.eyebrow %}{{ hero.eyebrow }}{% else %}{{ site_tagline }}{% endif %}{% if site_settings.location %} · {{ site_settings.location }}{% endif %}</p>
 
-  {% if hero.subheadline %}
+  {% if hero and hero.headline %}
+    <h1 class="intro__headline">{{ hero.headline }}</h1>
+  {% endif %}
+
+  {% if hero and hero.subheadline %}
     <p class="intro__lead">{{ hero.subheadline }}</p>
   {% else %}
     <p class="intro__lead">I build full-stack systems with <strong>Python</strong> and <strong>Django</strong>, and I'm increasingly drawn to the seam where clean engineering meets <strong>machine learning</strong> — what becomes possible when software can learn instead of just follow instructions.</p>
   {% endif %}
+
+  {% if hero and hero.cta_primary_label %}
+  <p class="intro__ctas">
+    <a href="{{ hero.cta_primary_url }}">{{ hero.cta_primary_label }}</a>
+    {% if hero.cta_secondary_label %}
+    <a href="{{ hero.cta_secondary_url }}">{{ hero.cta_secondary_label }}</a>
+    {% endif %}
+  </p>
+  {% endif %}
 </section>
 
-{# ---------- SELECTED WORK ---------- #}
+{# ---------- PROJECTS ---------- #}
 {% if featured_projects %}
 <section id="projects" class="block">
   <h2 class="block__label">Projects</h2>
@@ -28,7 +41,11 @@
       <p class="item__links">
         <a href="{{ project.get_absolute_url }}">Case study →</a>
         {% if project.live_url %}<a href="{{ project.live_url }}" target="_blank" rel="noopener">Live</a>{% endif %}
-        {% if project.github_url %}<a href="{{ project.github_url }}" target="_blank" rel="noopener">GitHub</a>{% endif %}
+        {% if project.github_url %}
+          <a href="{{ project.github_url }}" target="_blank" rel="noopener">GitHub</a>
+        {% elif project.is_proprietary %}
+          <span class="item__muted">Source private</span>
+        {% endif %}
       </p>
     </li>
     {% endfor %}
@@ -44,7 +61,11 @@
     {% for category in skill_categories %}
     <li class="item">
       <div class="item__head"><span class="item__title">{{ category.name }}</span></div>
-      <p class="item__desc">{% for skill in category.skills.all|slice:":8" %}{{ skill.name }}{% if not forloop.last %} · {% endif %}{% endfor %}</p>
+      <p class="item__desc">
+        {% for skill in category.skills.all %}
+          {{ skill.name }}{% if skill.proficiency == 'beginner' or skill.proficiency == 'intermediate' %} <span class="item__muted">(learning)</span>{% endif %}{% if not forloop.last %} · {% endif %}
+        {% endfor %}
+      </p>
     </li>
     {% endfor %}
   </ul>
@@ -63,6 +84,16 @@
         <span class="item__meta">{{ exp.start_date|date:"Y" }}–{% if exp.is_current %}now{% else %}{{ exp.end_date|date:"Y" }}{% endif %}</span>
       </div>
       <p class="item__desc">{{ exp.summary }}</p>
+      {% with bullets=exp.get_responsibilities_list %}
+      {% if bullets %}
+      <ul class="item__bullets">
+        {% for bullet in bullets|slice:":3" %}
+        <li>{{ bullet }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% endwith %}
+      {% if exp.technologies %}<p class="item__muted">{{ exp.technologies }}</p>{% endif %}
     </li>
     {% endfor %}
   </ul>
@@ -80,7 +111,7 @@
         <span class="item__title">{{ edu.degree }}{% if edu.field_of_study %} · {{ edu.field_of_study }}{% endif %}</span>
         {% if edu.end_date %}<span class="item__meta">{{ edu.end_date|date:"Y" }}</span>{% endif %}
       </div>
-      <p class="item__desc">{{ edu.institution }}{% if edu.location %} · {{ edu.location }}{% endif %}</p>
+      <p class="item__desc">{{ edu.institution }}{% if edu.location %} · {{ edu.location }}{% endif %}{% if edu.grade %} · {{ edu.grade }}{% endif %}</p>
     </li>
     {% endfor %}
   </ul>
@@ -134,8 +165,8 @@
       <span class="contact-card__value">{{ site_settings.twitter_url|cut:"https://"|cut:"http://" }}</span>
     </a>
     {% endif %}
-    {% if site_settings.resume %}
-    <a class="contact-card" href="{{ site_settings.resume.url }}" target="_blank" rel="noopener">
+    {% if resume_url %}
+    <a class="contact-card" href="{{ resume_url }}" target="_blank" rel="noopener">
       <span class="contact-card__label">Résumé</span>
       <span class="contact-card__value">Download PDF</span>
     </a>

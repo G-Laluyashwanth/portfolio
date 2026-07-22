@@ -43,7 +43,12 @@ class Skill(models.Model):
 
     class Meta:
         ordering = ['category__order', 'order', 'name']
-        unique_together = [('category', 'name')]
+        constraints = [
+            models.UniqueConstraint(
+                fields=['category', 'name'],
+                name='unique_skill_per_category',
+            ),
+        ]
 
     def __str__(self):
         return f'{self.name} ({self.get_proficiency_display()})'

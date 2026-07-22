@@ -2,6 +2,11 @@
 
 {% block title %}{{ project.title }} — {{ site_name }}{% endblock %}
 {% block meta_description %}{{ project.short_description }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ project.title }} — {{ site_name }}{% endblock %}
+{% block og_description %}{{ project.short_description }}{% endblock %}
+{% block twitter_title %}{{ project.title }} — {{ site_name }}{% endblock %}
+{% block twitter_description %}{{ project.short_description }}{% endblock %}
 
 {% block content %}
 <article class="case">
@@ -16,10 +21,14 @@
     {% if project.start_date %}{{ project.start_date|date:"M Y" }} – {% if project.is_ongoing %}Present{% else %}{{ project.end_date|date:"M Y" }}{% endif %}{% endif %}
   </p>
 
-  {% if project.live_url or project.github_url %}
+  {% if project.live_url or project.github_url or project.is_proprietary %}
   <p class="case__links">
     {% if project.live_url %}<a href="{{ project.live_url }}" target="_blank" rel="noopener">View live →</a>{% endif %}
-    {% if project.github_url %}<a href="{{ project.github_url }}" target="_blank" rel="noopener">Source →</a>{% endif %}
+    {% if project.github_url %}
+      <a href="{{ project.github_url }}" target="_blank" rel="noopener">Source →</a>
+    {% elif project.is_proprietary %}
+      <span class="item__muted">Source private (client work)</span>
+    {% endif %}
   </p>
   {% endif %}
 

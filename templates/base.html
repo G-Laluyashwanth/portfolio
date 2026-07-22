@@ -11,28 +11,29 @@
   <title>{% block title %}{{ site_name }} — {{ site_tagline }}{% endblock %}</title>
   <meta name="description" content="{% block meta_description %}{{ site_settings.meta_description }}{% endblock %}" />
   <meta name="author" content="{{ site_name }}" />
-  <link rel="canonical" href="{{ request.build_absolute_uri }}" />
+  <link rel="canonical" href="{% block canonical %}{{ canonical_url }}{% endblock %}" />
   {% if has_writing %}<link rel="alternate" type="application/rss+xml" title="{{ site_name }} — Writing" href="{% url 'feed' %}" />{% endif %}
 
   {# Open Graph #}
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}" />
   <meta property="og:site_name" content="{{ site_name }}" />
-  <meta property="og:url" content="{{ request.build_absolute_uri }}" />
-  <meta property="og:title" content="{{ site_name }} — {{ site_tagline }}" />
-  <meta property="og:description" content="{{ site_settings.meta_description }}" />
+  <meta property="og:url" content="{% block og_url %}{{ canonical_url }}{% endblock %}" />
+  <meta property="og:title" content="{% block og_title %}{{ site_name }} — {{ site_tagline }}{% endblock %}" />
+  <meta property="og:description" content="{% block og_description %}{{ site_settings.meta_description }}{% endblock %}" />
   <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'og.png' %}" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="{{ site_name }} — {{ site_tagline }}" />
-  <meta name="twitter:description" content="{{ site_settings.meta_description }}" />
+  <meta name="twitter:title" content="{% block twitter_title %}{{ site_name }} — {{ site_tagline }}{% endblock %}" />
+  <meta name="twitter:description" content="{% block twitter_description %}{{ site_settings.meta_description }}{% endblock %}" />
   <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'og.png' %}" />
 
   {# Structured data (Person) #}
   {% if structured_data %}<script type="application/ld+json">{{ structured_data|safe }}</script>{% endif %}
 
-  {# Self-hosted Inter — preload the weights used above the fold #}
+  {# Self-hosted Inter — preload weights used above the fold #}
   <link rel="preload" href="{% static 'fonts/inter-400.woff2' %}" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="{% static 'fonts/inter-500.woff2' %}" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="{% static 'fonts/inter-600.woff2' %}" as="font" type="font/woff2" crossorigin />
 
   <link rel="stylesheet" href="{% static 'css/style.css' %}" />
@@ -48,7 +49,7 @@
       <a href="{% url 'core:home' %}#projects">Projects</a>
       <a href="{% url 'core:home' %}#experience">Experience</a>
       {% if has_writing %}<a href="{% url 'core:home' %}#writing">Writing</a>{% endif %}
-      {% if site_settings.resume %}<a href="{{ site_settings.resume.url }}" target="_blank" rel="noopener">Résumé</a>{% endif %}
+      {% if resume_url %}<a href="{{ resume_url }}" target="_blank" rel="noopener">Résumé</a>{% endif %}
       <a href="{% url 'core:home' %}#contact">Contact</a>
     </nav>
   </header>
@@ -59,7 +60,7 @@
 
   <footer class="wrap site-footer">
     <div class="links-row">
-      {% if site_settings.resume %}<a href="{{ site_settings.resume.url }}" target="_blank" rel="noopener">Résumé</a>{% endif %}
+      {% if resume_url %}<a href="{{ resume_url }}" target="_blank" rel="noopener">Résumé</a>{% endif %}
       {% if site_settings.twitter_url %}<a href="{{ site_settings.twitter_url }}" target="_blank" rel="noopener">Twitter</a>{% endif %}
       {% if site_settings.linkedin_url %}<a href="{{ site_settings.linkedin_url }}" target="_blank" rel="noopener">LinkedIn</a>{% endif %}
       {% if site_settings.github_url %}<a href="{{ site_settings.github_url }}" target="_blank" rel="noopener">GitHub</a>{% endif %}

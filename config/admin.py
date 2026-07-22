@@ -66,11 +66,4 @@ UNFOLD_SIDEBAR = [
             _nav_item('Skills', 'psychology', reverse_lazy('admin:skills_skill_changelist')),
         ],
     },
-    {
-        'title': 'Inbox',
-        'collapsible': True,
-        'items': [
-            _nav_item('Contact submissions', 'mail', reverse_lazy('admin:contact_contactsubmission_changelist')),
-        ],
-    },
 ]

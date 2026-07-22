@@ -76,7 +76,7 @@ class ProjectAdmin(ModelAdmin):
             'classes': ('collapse',),
         }),
         ('Visibility', {
-            'fields': ('is_featured', 'is_published', 'order'),
+            'fields': ('is_featured', 'is_published', 'is_proprietary', 'order'),
         }),
     )
 

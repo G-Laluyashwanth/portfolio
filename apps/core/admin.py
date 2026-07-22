@@ -26,11 +26,10 @@ class SiteSettingsAdmin(ModelAdmin):
             'fields': ('site_name', 'tagline'),
         }),
         ('SEO', {
-            'fields': ('meta_description', 'meta_keywords'),
-            'classes': ('collapse',),
+            'fields': ('meta_description',),
         }),
         ('Contact', {
-            'fields': ('email', 'phone', 'location'),
+            'fields': ('email', 'location'),
         }),
         ('Social & links', {
             'fields': ('github_url', 'linkedin_url', 'twitter_url'),
