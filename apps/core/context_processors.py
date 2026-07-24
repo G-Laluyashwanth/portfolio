@@ -41,7 +41,7 @@ def site_context(request):
                 settings_obj.twitter_url,
             ) if url
         ]
-        # Shorter job title for schema — first segment of the tagline.
+        # Shorter job title for schema - first segment of the tagline.
         job_title = (settings_obj.tagline or '').split('·')[0].strip() or settings_obj.tagline
         person = {
             '@context': 'https://schema.org',

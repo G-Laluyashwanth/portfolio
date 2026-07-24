@@ -10,7 +10,7 @@ from .models import Post, SiteSettings
 
 class LatestPostsFeed(Feed):
     def title(self):
-        return f'{SiteSettings.load().site_name} — Writing'
+        return f'{SiteSettings.load().site_name} - Writing'
 
     def description(self):
         return 'Notes on full-stack engineering and machine learning.'

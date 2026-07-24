@@ -1,11 +1,10 @@
-/* ============================================================
-   PORTFOLIO — MINIMAL (dark, typography-first)
+/* Portfolio - minimal dark, typography-first
    Author: Lalu Yashwanth
    Philosophy: the words are the design. Subtle ambient dots,
    contact cards for actions, otherwise one column / one font.
-   ============================================================ */
+*/
 
-/* ---------- self-hosted Inter (latin subset) ---------- */
+/* ~ self-hosted Inter (latin subset) ~ */
 @font-face {
   font-family: "Inter";
   font-style: normal;
@@ -42,7 +41,7 @@
           Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* ---------- reset ---------- */
+/* ~ reset ~ */
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 body {
@@ -84,7 +83,7 @@ a:focus-visible, button:focus-visible {
 }
 .skip-link:focus { left: 16px; top: 16px; }
 
-/* ---------- ambient background (subtle floating dots) ---------- */
+/* ~ ambient background (subtle floating dots) ~ */
 .dots {
   position: fixed;
   inset: -60px;                 /* oversize so the float never reveals an edge */
@@ -101,7 +100,7 @@ a:focus-visible, button:focus-visible {
   to   { transform: translateY(12px); }
 }
 
-/* ---------- layout ---------- */
+/* ~ layout ~ */
 .wrap {
   width: 100%;
   max-width: var(--max);
@@ -109,7 +108,7 @@ a:focus-visible, button:focus-visible {
   padding-inline: 24px;
 }
 
-/* ---------- header / nav ---------- */
+/* ~ header / nav ~ */
 .site-header {
   padding-top: 72px;
   display: flex;
@@ -132,7 +131,7 @@ a:focus-visible, button:focus-visible {
 }
 .nav a:hover { color: var(--text); }
 
-/* ---------- intro ---------- */
+/* ~ intro ~ */
 .intro { padding-top: 40px; }
 .intro__role {
   color: var(--faint);
@@ -168,7 +167,7 @@ a:focus-visible, button:focus-visible {
   text-decoration-color: var(--text);
 }
 
-/* ---------- blocks / lists ---------- */
+/* ~ blocks / lists ~ */
 .block { padding-top: 64px; }
 .block__label {
   font-size: 0.8rem;
@@ -245,13 +244,13 @@ a.item__title:hover { text-decoration: underline; text-decoration-color: var(--t
   position: relative;
 }
 .item__bullets li::before {
-  content: "–";
+  content: "-";
   position: absolute;
   left: 0;
   color: var(--faint);
 }
 
-/* ---------- footer ---------- */
+/* ~ footer ~ */
 .site-footer {
   margin-top: 88px;
   padding: 32px 0 64px;
@@ -267,7 +266,7 @@ a.item__title:hover { text-decoration: underline; text-decoration-color: var(--t
 .links-row a:hover { color: var(--text); }
 .site-footer__copy { color: var(--faint); font-size: 0.82rem; }
 
-/* ---------- contact cards ---------- */
+/* ~ contact cards ~ */
 .contact-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -298,7 +297,7 @@ a.item__title:hover { text-decoration: underline; text-decoration-color: var(--t
   word-break: break-word;
 }
 
-/* ---------- case study (project detail) ---------- */
+/* ~ case study (project detail) ~ */
 .case { padding-top: 40px; }
 .case__meta {
   color: var(--faint);
@@ -315,14 +314,14 @@ a.item__title:hover { text-decoration: underline; text-decoration-color: var(--t
 .case__features { display: grid; gap: 8px; color: var(--muted); }
 .case__features li { padding-left: 18px; position: relative; }
 .case__features li::before {
-  content: "—"; position: absolute; left: 0; color: var(--faint);
+  content: "-"; position: absolute; left: 0; color: var(--faint);
 }
 .case__gallery { display: grid; gap: 16px; }
 .case__gallery figure { margin: 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
 .case__gallery figcaption { padding: 10px 14px; color: var(--faint); font-size: 0.85rem; }
 .case__tech { color: var(--faint); font-size: 0.9rem; }
 
-/* ---------- responsive ---------- */
+/* ~ responsive ~ */
 @media (max-width: 560px) {
   .site-header { padding-top: 48px; }
   .item__head { flex-direction: column; gap: 2px; }

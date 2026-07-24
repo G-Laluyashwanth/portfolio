@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
                     "typing_phrases",
                     models.TextField(
                         default="Full-Stack Developer\nPython & Django Engineer\nMachine Learning Enthusiast\nAPI Architect",
-                        help_text="One phrase per line — used by the typing animation in the hero.",
+                        help_text="One phrase per line - used by the typing animation in the hero.",
                     ),
                 ),
                 (

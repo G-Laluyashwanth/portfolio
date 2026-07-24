@@ -94,7 +94,7 @@ class Project(models.Model):
 
     @property
     def impact_headline(self):
-        """First sentence of the impact statement — the outcome recruiters scan for."""
+        """First sentence of the impact statement - the outcome recruiters scan for."""
         if not self.impact:
             return ''
         first = self.impact.strip().split('. ')[0].strip().rstrip('.')

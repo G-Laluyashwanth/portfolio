@@ -1,27 +1,27 @@
-# Portfolio — Lalu Yashwanth
+# Portfolio - Lalu Yashwanth
 
-A minimal, typography-first personal portfolio built with **Django 6**. Content is managed in Django admin (Unfold UI). The public site is a single dark theme, one font, one narrow column — with contact cards and a subtle ambient dot background.
+A minimal, typography-first personal portfolio built with **Django 6**. Content is managed in Django admin (Unfold UI). The public site is a single dark theme, one font, one narrow column - with contact cards and a subtle ambient dot background.
 
 **Focus:** Python · Django · PostgreSQL · REST APIs · Machine Learning · Hyderabad, India
 
----
+~
 
 ## Features
 
-- **Database-driven content** — projects, skills, experience, education, writing
-- **Minimal public UI** — typography-first, self-hosted Inter, no client-side JavaScript
-- **Case studies** — problem / solution / impact pages with tech stack
-- **Writing + RSS** — posts with `/feed/`, plus `sitemap.xml` and `robots.txt`
-- **SEO** — meta tags, Open Graph, Person JSON-LD, skip-to-content link
-- **Admin** — django-unfold dark/light UI, structured sidebar, status badges
-- **Seed command** — `python manage.py seed_portfolio` (use `--reset` to wipe first)
+- **Database-driven content** - projects, skills, experience, education, writing
+- **Minimal public UI** - typography-first, self-hosted Inter, no client-side JavaScript
+- **Case studies** - problem / solution / impact pages with tech stack
+- **Writing + RSS** - posts with `/feed/`, plus `sitemap.xml` and `robots.txt`
+- **SEO** - meta tags, Open Graph, Person JSON-LD, skip-to-content link
+- **Admin** - django-unfold dark/light UI, structured sidebar, status badges
+- **Seed command** - `python manage.py seed_portfolio` (use `--reset` to wipe first)
 
----
+~
 
 ## Tech stack
 
 | Layer | Tools |
-|---|---|
+| - | - |
 | Backend | Python 3.13 · Django 6 |
 | Database | SQLite (dev) · PostgreSQL (prod via `DATABASE_URL` or `DB_ENGINE`) |
 | Frontend | Django templates · custom CSS |
@@ -29,7 +29,7 @@ A minimal, typography-first personal portfolio built with **Django 6**. Content 
 | Static | WhiteNoise (`CompressedManifestStaticFilesStorage`) |
 | Deploy | Gunicorn · `Procfile` (`migrate` + `collectstatic` on release) |
 
----
+~
 
 ## Quick start
 
@@ -48,7 +48,7 @@ python manage.py runserver
 - Admin: http://127.0.0.1:8000/admin/
 - Résumé PDF: served from `static/resume/` (works with `DEBUG=False`)
 
----
+~
 
 ## Project structure
 
@@ -66,7 +66,7 @@ portfolio/
 └── manage.py
 ```
 
----
+~
 
 ## Environment
 
@@ -75,9 +75,9 @@ See `.env.example`. Important production notes:
 - Set a strong `SECRET_KEY` (50+ chars) when `DEBUG=False`
 - Prefer `DATABASE_URL` on hosted platforms
 - Set `CSRF_TRUSTED_ORIGINS` to your HTTPS origin
-- Résumé is in **static**, not media — so it survives production without a media CDN
+- Résumé is in **static**, not media - so it survives production without a media CDN
 
----
+~
 
 ## Tests
 
@@ -86,8 +86,8 @@ python manage.py test
 python manage.py check --deploy   # expect warnings only when DEBUG=True locally
 ```
 
----
+~
 
 ## License
 
-Personal portfolio — all rights reserved.
+Personal portfolio - all rights reserved.

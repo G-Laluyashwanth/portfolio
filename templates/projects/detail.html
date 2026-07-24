@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ project.title }} — {{ site_name }}{% endblock %}
+{% block title %}{{ project.title }} - {{ site_name }}{% endblock %}
 {% block meta_description %}{{ project.short_description }}{% endblock %}
 {% block og_type %}article{% endblock %}
-{% block og_title %}{{ project.title }} — {{ site_name }}{% endblock %}
+{% block og_title %}{{ project.title }} - {{ site_name }}{% endblock %}
 {% block og_description %}{{ project.short_description }}{% endblock %}
-{% block twitter_title %}{{ project.title }} — {{ site_name }}{% endblock %}
+{% block twitter_title %}{{ project.title }} - {{ site_name }}{% endblock %}
 {% block twitter_description %}{{ project.short_description }}{% endblock %}
 
 {% block content %}
@@ -18,7 +18,7 @@
   <p class="case__lead">{{ project.short_description }}</p>
 
   <p class="case__meta" style="margin-top:16px;">
-    {% if project.start_date %}{{ project.start_date|date:"M Y" }} – {% if project.is_ongoing %}Present{% else %}{{ project.end_date|date:"M Y" }}{% endif %}{% endif %}
+    {% if project.start_date %}{{ project.start_date|date:"M Y" }} - {% if project.is_ongoing %}Present{% else %}{{ project.end_date|date:"M Y" }}{% endif %}{% endif %}
   </p>
 
   {% if project.live_url or project.github_url or project.is_proprietary %}

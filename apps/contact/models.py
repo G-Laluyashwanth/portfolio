@@ -10,7 +10,7 @@ class ContactSubmission(models.Model):
 
     is_read = models.BooleanField(default=False)
     is_replied = models.BooleanField(default=False)
-    notes = models.TextField(blank=True, help_text='Internal notes — not visible to sender.')
+    notes = models.TextField(blank=True, help_text='Internal notes - not visible to sender.')
 
     ip_address = models.GenericIPAddressField(blank=True, null=True)
     user_agent = models.CharField(max_length=400, blank=True)
@@ -23,4 +23,4 @@ class ContactSubmission(models.Model):
         verbose_name_plural = 'Contact Submissions'
 
     def __str__(self):
-        return f'{self.name} <{self.email}> — {self.created_at:%Y-%m-%d}'
+        return f'{self.name} <{self.email}> - {self.created_at:%Y-%m-%d}'

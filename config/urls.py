@@ -31,5 +31,5 @@ handler404 = 'django.views.defaults.page_not_found'
 handler500 = 'django.views.defaults.server_error'
 
 if settings.DEBUG:
-    # Media only — static is served by the staticfiles app / WhiteNoise.
+    # Media only - static is served by the staticfiles app / WhiteNoise.
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -65,7 +65,7 @@ class Command(BaseCommand):
         self.stdout.write('  Visit / to see the home page')
         self.stdout.write('  Visit /admin/ to manage content')
 
-    # -----------------------------------------------------------------
+# ~~~
     def _seed_site_settings(self):
         s = SiteSettings.load()
         s.site_name = 'Lalu Yashwanth'
@@ -94,7 +94,7 @@ class Command(BaseCommand):
             eyebrow='Full-Stack Developer · Python · Django · ML',
             headline='Building scalable web applications with Python, Django, and Machine Learning.',
             subheadline=(
-                'I build full-stack systems with Python and Django — enterprise web apps, '
+                'I build full-stack systems with Python and Django - enterprise web apps, '
                 'REST APIs, and automation tools that remove hours of manual work. Lately I have '
                 'been drawn to the seam where clean engineering meets machine learning, and what '
                 'becomes possible when software can learn instead of just follow rules.'
@@ -106,7 +106,7 @@ class Command(BaseCommand):
             is_active=True,
         )
 
-    # -----------------------------------------------------------------
+# ~~~
     def _seed_tech_stack(self):
         items = [
             ('Python', 'primary'), ('Django', 'primary'),
@@ -147,7 +147,7 @@ class Command(BaseCommand):
         if reset:
             Project.objects.all().delete()
 
-        # 0. Personal Portfolio — public, featured first
+        # 0. Personal Portfolio - public, featured first
         self._upsert_project(
             tech,
             slug='personal-portfolio',
@@ -155,7 +155,7 @@ class Command(BaseCommand):
                 'title': 'Personal Portfolio',
                 'short_description': (
                     'Minimal dark Django portfolio with SEO, Unfold admin, self-hosted '
-                    'fonts, and WhiteNoise — built to showcase work without framework noise.'
+                    'fonts, and WhiteNoise - built to showcase work without framework noise.'
                 ),
                 'description': (
                     'A typography-first personal portfolio built with Django. Content is '
@@ -165,8 +165,8 @@ class Command(BaseCommand):
                     'stays intentionally quiet so the work and writing do the talking.'
                 ),
                 'problem': (
-                    'I needed a place to present client and personal work honestly — with '
-                    'editable content, decent SEO, and a calm dark layout — without shipping '
+                    'I needed a place to present client and personal work honestly - with '
+                    'editable content, decent SEO, and a calm dark layout - without shipping '
                     'another generic template site.'
                 ),
                 'solution': (
@@ -204,7 +204,7 @@ class Command(BaseCommand):
             ],
         )
 
-        # 1. ISO Audit Document Generator — flagship (proprietary)
+        # 1. ISO Audit Document Generator - flagship (proprietary)
         self._upsert_project(
             tech,
             slug='iso-audit-document-generator',
@@ -212,7 +212,7 @@ class Command(BaseCommand):
                 'title': 'ISO Audit Document Generator',
                 'short_description': (
                     'Django-based platform that auto-generates 29 audit documents per client '
-                    'engagement from a single multi-step form — replacing 2-4 hours of manual work.'
+                    'engagement from a single multi-step form - replacing 2-4 hours of manual work.'
                 ),
                 'description': (
                     'A production Django web application built for Concept QA Labs to eliminate '
@@ -220,7 +220,7 @@ class Command(BaseCommand):
                     'created 29 audit documents per client by hand, taking 2-4 hours with high '
                     'error rates and zero version control. This system captures audit information '
                     'once via a 4-step wizard and auto-generates every required document from '
-                    'templates — Word and Excel — using python-docx and openpyxl.'
+                    'templates - Word and Excel - using python-docx and openpyxl.'
                 ),
                 'problem': (
                     'Team members manually created 29 audit documents per client engagement, '
@@ -342,7 +342,7 @@ class Command(BaseCommand):
             defaults={
                 'title': 'Concept QA Labs Corporate Website',
                 'short_description': (
-                    'Fully responsive, SEO-optimized corporate website built with Django + MySQL — '
+                    'Fully responsive, SEO-optimized corporate website built with Django + MySQL - '
                     'dynamic content management, contact workflows, and mobile-first design.'
                 ),
                 'description': (
@@ -466,7 +466,7 @@ class Command(BaseCommand):
                 ),
                 'impact': (
                     'Built 7 custom Jira dashboards with KPI metrics, filter-based gadgets, and '
-                    'stakeholder-ready reporting views — eliminating manual status tracking.'
+                    'stakeholder-ready reporting views - eliminating manual status tracking.'
                 ),
                 'category': 'automation',
                 'company': 'Concept QA Labs Pvt. Ltd.',
@@ -489,21 +489,21 @@ class Command(BaseCommand):
             ],
         )
 
-        # 99. ML project draft — unpublished until metrics + public repo are ready
+        # 99. ML project draft - unpublished until metrics + public repo are ready
         self._upsert_project(
             tech,
             slug='ml-project-draft',
             defaults={
                 'title': 'ML project (draft)',
                 'short_description': (
-                    'Placeholder for the machine-learning project currently in progress — '
+                    'Placeholder for the machine-learning project currently in progress - '
                     'publish when metrics and a public repo are ready.'
                 ),
                 'description': (
                     'This is a draft entry reserved for an ML project I am building for the '
                     'portfolio. It will stay unpublished until there is a clear problem statement, '
                     'honest metrics, and a public repository (or an explicit note that the work '
-                    'is proprietary). The goal is not to pad the site with unfinished work — it '
+                    'is proprietary). The goal is not to pad the site with unfinished work - it '
                     'is to leave a slot that becomes real when the model and evaluation story '
                     'are ready to ship.'
                 ),
@@ -526,9 +526,9 @@ class Command(BaseCommand):
             features=[],
         )
 
-    # -----------------------------------------------------------------
+# ~~~
     def _seed_skills(self):
-        # Skills list is authoritative when seeding — wipe then recreate.
+        # Skills list is authoritative when seeding - wipe then recreate.
         Skill.objects.all().delete()
         SkillCategory.objects.all().delete()
 
@@ -608,9 +608,9 @@ class Command(BaseCommand):
                     order=i,
                 )
 
-    # -----------------------------------------------------------------
+# ~~~
     def _seed_experience(self):
-        # Small fixed set — delete and recreate so re-runs stay in sync.
+        # Small fixed set - delete and recreate so re-runs stay in sync.
         Experience.objects.all().delete()
 
         Experience.objects.create(
@@ -628,7 +628,7 @@ class Command(BaseCommand):
             ),
             responsibilities=(
                 'Architected and built the CQAL Client Management System (Django + PostgreSQL) for ISO/CMMI audit tracking with RBAC, automated reminders, and Excel export\n'
-                'Designed and developed the ISO Audit Document Generator — automating creation of 29 documents per engagement using python-docx, openpyxl, and Celery\n'
+                'Designed and developed the ISO Audit Document Generator - automating creation of 29 documents per engagement using python-docx, openpyxl, and Celery\n'
                 'Built and deployed the Concept QA Labs corporate website (Django + MySQL) and PQE Process Quality Excellence platform\n'
                 'Implemented ISO certification trend analysis using Python, Pandas, and Matplotlib via Google Colab\n'
                 'Designed normalized PostgreSQL schemas supporting complex many-to-many audit-client relationships\n'
@@ -664,7 +664,7 @@ class Command(BaseCommand):
             is_published=True,
         )
 
-    # -----------------------------------------------------------------
+# ~~~
     def _seed_education(self):
         Education.objects.all().delete()
 
@@ -692,7 +692,7 @@ class Command(BaseCommand):
             order=2,
         )
 
-    # -----------------------------------------------------------------
+# ~~~
     def _seed_writing(self):
         Post.objects.update_or_create(
             slug='moving-from-full-stack-into-machine-learning',
@@ -704,7 +704,7 @@ class Command(BaseCommand):
                     'engineering discipline carries into ML.'
                 ),
                 'content': (
-                    'For the last few years I have lived in production Django. Not demos — '
+                    'For the last few years I have lived in production Django. Not demos - '
                     'systems that had to run for real teams: audit tracking, document generation, '
                     'RBAC, reminders, Excel exports, Celery jobs that actually finish. That work '
                     'taught me a particular kind of care. Schemas that survive growth. APIs that '
@@ -712,31 +712,31 @@ class Command(BaseCommand):
                     'they are correct.\n\n'
                     'I still like that kind of software. What changed is the ceiling I care about. '
                     'A lot of the pain in those products was pattern recognition with a human in '
-                    'the loop — scheduling, classification of edge cases, trend views stitched '
+                    'the loop - scheduling, classification of edge cases, trend views stitched '
                     'together in Pandas and Matplotlib. The natural next question for me was: '
                     'what if the system could learn some of those patterns instead of only encoding '
                     'them as rules?\n\n'
                     'That is why I am moving deeper into machine learning. Not because ML is '
                     'fashionable, and not because I want to abandon web engineering. I want to '
-                    'build products where models are a component — the same way a queue or a '
-                    'database is a component — and where the surrounding product still has the '
+                    'build products where models are a component - the same way a queue or a '
+                    'database is a component - and where the surrounding product still has the '
                     'discipline I already trust: clear problem statements, honest metrics, '
                     'versioned code, and a path from notebook to something someone can use.\n\n'
                     'There is more overlap than people admit. Debugging a bad train/test split '
                     'is not so different from debugging a bad queryset. Feature leakage is a '
                     'data-integrity bug. Hyperparameter search without a fixed evaluation story '
                     'is shipping without acceptance criteria. The habits that made Django apps '
-                    'reliable — small interfaces, reproducible environments, writing down what '
-                    '"done" means — are the same habits that keep ML work from becoming a '
+                    'reliable - small interfaces, reproducible environments, writing down what '
+                    '"done" means - are the same habits that keep ML work from becoming a '
                     'slideshow of accuracy numbers.\n\n'
                     'I am currently building an ML project for this portfolio. It will stay '
                     'unpublished until it earns a place: a concrete problem, a public repo (or '
                     'an honest proprietary note), and metrics I am willing to defend. Until then '
-                    'the draft slot on the projects page is intentional — a reminder not to '
+                    'the draft slot on the projects page is intentional - a reminder not to '
                     'perform competence before the work is ready.\n\n'
                     'If you are reading this as a recruiter or collaborator: my baseline is still '
                     'Python and Django in production. The direction of travel is classical ML '
-                    'and the tooling around it — Pandas, NumPy, scikit-learn, careful EDA — with '
+                    'and the tooling around it - Pandas, NumPy, scikit-learn, careful EDA - with '
                     'TensorFlow/Keras as something I am actively learning, not pretending to '
                     'master overnight. I care about shipping systems that learn where learning '
                     'helps, and that stay maintainable where rules still win.'

@@ -40,7 +40,7 @@ class ContactSubmissionAdmin(ModelAdmin):
 
     @display(description='Subject')
     def subject_preview(self, obj):
-        return obj.subject[:72] if obj.subject else '—'
+        return obj.subject[:72] if obj.subject else ' - '
 
     @display(description='Read', label={True: 'success', False: 'warning'})
     def read_badge(self, obj):

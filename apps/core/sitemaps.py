@@ -33,7 +33,7 @@ class PostSitemap(Sitemap):
     priority = 0.6
 
     def items(self):
-        # Only internal posts — external ones live on other domains.
+        # Only internal posts - external ones live on other domains.
         return Post.objects.filter(is_published=True, external_url='')
 
     def lastmod(self, obj):

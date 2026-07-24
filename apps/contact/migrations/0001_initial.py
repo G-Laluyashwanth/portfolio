@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 (
                     "notes",
                     models.TextField(
-                        blank=True, help_text="Internal notes — not visible to sender."
+                        blank=True, help_text="Internal notes - not visible to sender."
                     ),
                 ),
                 ("ip_address", models.GenericIPAddressField(blank=True, null=True)),

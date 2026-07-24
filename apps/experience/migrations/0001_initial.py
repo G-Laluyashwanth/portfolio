@@ -94,7 +94,7 @@ class Migration(migrations.Migration):
                     "responsibilities",
                     models.TextField(
                         blank=True,
-                        help_text="One bullet per line — shown as a list on detail.",
+                        help_text="One bullet per line - shown as a list on detail.",
                     ),
                 ),
                 (

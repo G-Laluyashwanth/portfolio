@@ -27,7 +27,7 @@ class Experience(models.Model):
     summary = models.TextField(help_text='Short overview shown on the timeline.')
     responsibilities = models.TextField(
         blank=True,
-        help_text='One bullet per line — shown as a list on detail.'
+        help_text='One bullet per line - shown as a list on detail.'
     )
     technologies = models.CharField(
         max_length=400,
@@ -75,4 +75,4 @@ class Education(models.Model):
         verbose_name_plural = 'Education'
 
     def __str__(self):
-        return f'{self.degree} — {self.institution}'
+        return f'{self.degree} - {self.institution}'

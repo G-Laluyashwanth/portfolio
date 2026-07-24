@@ -2,7 +2,7 @@
 
 {% block content %}
 
-{# ---------- INTRO ---------- #}
+{# ~ INTRO ~ #}
 <section class="intro">
   <p class="intro__role">{% if hero and hero.eyebrow %}{{ hero.eyebrow }}{% else %}{{ site_tagline }}{% endif %}{% if site_settings.location %} · {{ site_settings.location }}{% endif %}</p>
 
@@ -13,7 +13,7 @@
   {% if hero and hero.subheadline %}
     <p class="intro__lead">{{ hero.subheadline }}</p>
   {% else %}
-    <p class="intro__lead">I build full-stack systems with <strong>Python</strong> and <strong>Django</strong>, and I'm increasingly drawn to the seam where clean engineering meets <strong>machine learning</strong> — what becomes possible when software can learn instead of just follow instructions.</p>
+    <p class="intro__lead">I build full-stack systems with <strong>Python</strong> and <strong>Django</strong>, and I'm increasingly drawn to the seam where clean engineering meets <strong>machine learning</strong> - what becomes possible when software can learn instead of just follow instructions.</p>
   {% endif %}
 
   {% if hero and hero.cta_primary_label %}
@@ -26,7 +26,7 @@
   {% endif %}
 </section>
 
-{# ---------- PROJECTS ---------- #}
+{# ~ PROJECTS ~ #}
 {% if featured_projects %}
 <section id="projects" class="block">
   <h2 class="block__label">Projects</h2>
@@ -53,7 +53,7 @@
 </section>
 {% endif %}
 
-{# ---------- SKILLS ---------- #}
+{# ~ SKILLS ~ #}
 {% if skill_categories %}
 <section id="skills" class="block">
   <h2 class="block__label">Skills</h2>
@@ -72,7 +72,7 @@
 </section>
 {% endif %}
 
-{# ---------- EXPERIENCE ---------- #}
+{# ~ EXPERIENCE ~ #}
 {% if experiences %}
 <section id="experience" class="block">
   <h2 class="block__label">Experience</h2>
@@ -81,7 +81,7 @@
     <li class="item">
       <div class="item__head">
         <span class="item__title">{{ exp.role }} · {{ exp.company }}</span>
-        <span class="item__meta">{{ exp.start_date|date:"Y" }}–{% if exp.is_current %}now{% else %}{{ exp.end_date|date:"Y" }}{% endif %}</span>
+        <span class="item__meta">{{ exp.start_date|date:"Y" }}-{% if exp.is_current %}now{% else %}{{ exp.end_date|date:"Y" }}{% endif %}</span>
       </div>
       <p class="item__desc">{{ exp.summary }}</p>
       {% with bullets=exp.get_responsibilities_list %}
@@ -100,7 +100,7 @@
 </section>
 {% endif %}
 
-{# ---------- EDUCATION ---------- #}
+{# ~ EDUCATION ~ #}
 {% if educations %}
 <section class="block">
   <h2 class="block__label">Education</h2>
@@ -118,7 +118,7 @@
 </section>
 {% endif %}
 
-{# ---------- WRITING ---------- #}
+{# ~ WRITING ~ #}
 {% if posts %}
 <section id="writing" class="block">
   <h2 class="block__label">Writing</h2>
@@ -136,7 +136,7 @@
 </section>
 {% endif %}
 
-{# ---------- CONTACT ---------- #}
+{# ~ CONTACT ~ #}
 <section id="contact" class="block">
   <h2 class="block__label">Get in touch</h2>
   <p class="item__desc">Open to full-stack and machine-learning roles, and interesting freelance work.</p>

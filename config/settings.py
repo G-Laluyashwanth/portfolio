@@ -10,9 +10,9 @@ from decouple import config, Csv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ---------------------------------------------------------------------------
+# ~~~
 # Core
-# ---------------------------------------------------------------------------
+# ~~~
 DEBUG = config('DEBUG', default=True, cast=bool)
 SECRET_KEY = config('SECRET_KEY', default='dev-insecure-change-me-only-for-local')
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=Csv())
@@ -27,9 +27,9 @@ if not DEBUG and (
         'Set a strong SECRET_KEY (50+ chars) in the environment when DEBUG=False.'
     )
 
-# ---------------------------------------------------------------------------
+# ~~~
 # Applications
-# ---------------------------------------------------------------------------
+# ~~~
 DJANGO_APPS = [
     'unfold',
     'unfold.contrib.filters',
@@ -85,9 +85,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# ---------------------------------------------------------------------------
-# Database — SQLite by default; DATABASE_URL or DB_ENGINE=postgres for Postgres
-# ---------------------------------------------------------------------------
+# ~~~
+# Database - SQLite by default; DATABASE_URL or DB_ENGINE=postgres for Postgres
+# ~~~
 DATABASE_URL = config('DATABASE_URL', default='')
 
 if DATABASE_URL:
@@ -124,9 +124,9 @@ else:
         }
     }
 
-# ---------------------------------------------------------------------------
+# ~~~
 # Password validation
-# ---------------------------------------------------------------------------
+# ~~~
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -134,23 +134,23 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# ---------------------------------------------------------------------------
+# ~~~
 # i18n / tz
-# ---------------------------------------------------------------------------
+# ~~~
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 
-# ---------------------------------------------------------------------------
+# ~~~
 # Static & Media
-# ---------------------------------------------------------------------------
+# ~~~
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Django 6 uses STORAGES (STATICFILES_STORAGE is ignored).
-# Manifest hashing only in production — local/tests use plain storage so
+# Manifest hashing only in production - local/tests use plain storage so
 # missing staticfiles.json does not break {% static %} / static().
 _STATIC_BACKEND = (
     'django.contrib.staticfiles.storage.StaticFilesStorage'
@@ -174,9 +174,9 @@ RESUME_STATIC = 'resume/Lalu_Yashwanth_Resume.pdf'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ---------------------------------------------------------------------------
+# ~~~
 # Production security (only when DEBUG is off)
-# ---------------------------------------------------------------------------
+# ~~~
 if not DEBUG:
     SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=True, cast=bool)
     SECURE_HSTS_SECONDS = config('SECURE_HSTS_SECONDS', default=31536000, cast=int)
@@ -186,9 +186,9 @@ if not DEBUG:
     CSRF_COOKIE_SECURE = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# ---------------------------------------------------------------------------
-# Django Unfold — admin UI (structured sidebar, light/dark toggle)
-# ---------------------------------------------------------------------------
+# ~~~
+# Django Unfold - admin UI (structured sidebar, light/dark toggle)
+# ~~~
 from django.templatetags.static import static  # noqa: E402
 from config.admin import UNFOLD_SIDEBAR, dashboard_callback, environment_callback  # noqa: E402
 
@@ -248,9 +248,9 @@ UNFOLD = {
     },
 }
 
-# ---------------------------------------------------------------------------
-# Email (optional — kept for future use; contact form is removed)
-# ---------------------------------------------------------------------------
+# ~~~
+# Email (optional - kept for future use; contact form is removed)
+# ~~~
 EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
 EMAIL_HOST = config('EMAIL_HOST', default='')
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
