@@ -63,10 +63,18 @@ class ProjectAdmin(ModelAdmin):
 
     fieldsets = (
         ('Basic info', {
-            'fields': ('title', 'slug', 'category', 'company', 'role', 'cover_image'),
+            'fields': ('title', 'subtitle', 'slug', 'category', 'company', 'role', 'cover_image'),
         }),
         ('Content', {
-            'fields': ('short_description', 'description', 'problem', 'solution', 'impact'),
+            'fields': (
+                'short_description', 'description', 'problem', 'solution', 'impact',
+            ),
+        }),
+        ('Case study depth', {
+            'fields': (
+                'technical_highlights', 'roles_and_users', 'workflows', 'scope_notes',
+            ),
+            'description': 'One item per line for list sections on the public case study.',
         }),
         ('Tech & links', {
             'fields': ('tech_stack', 'live_url', 'github_url'),

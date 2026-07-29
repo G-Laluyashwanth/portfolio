@@ -65,7 +65,7 @@ class Command(BaseCommand):
         self.stdout.write('  Visit / to see the home page')
         self.stdout.write('  Visit /admin/ to manage content')
 
-# ~~~
+
     def _seed_site_settings(self):
         s = SiteSettings.load()
         s.site_name = 'Lalu Yashwanth'
@@ -106,37 +106,46 @@ class Command(BaseCommand):
             is_active=True,
         )
 
-# ~~~
+
     def _seed_tech_stack(self):
-        items = [
-            ('Python', 'primary'), ('Django', 'primary'),
-            ('Django REST Framework', 'primary'), ('PostgreSQL', 'accent'),
-            ('MySQL', 'accent'), ('JavaScript', 'warning'),
-            ('HTML5', 'warning'), ('CSS3', 'warning'),
-            ('Bootstrap', 'warning'), ('Celery', 'primary'),
-            ('Redis', 'accent'), ('python-docx', 'primary'),
-            ('openpyxl', 'primary'), ('Pandas', 'accent'),
-            ('NumPy', 'accent'), ('Matplotlib', 'accent'),
-            ('scikit-learn', 'accent'), ('TensorFlow', 'accent'),
-            ('Google Colab', 'accent'), ('Jupyter', 'accent'),
-            ('Git', 'success'), ('GitHub', 'success'),
-            ('Jira', 'success'), ('Confluence', 'success'),
-            ('JQL', 'success'), ('WhiteNoise', 'success'),
-            ('jQuery', 'warning'),
-        ]
+        from apps.projects.seed_data import TECH_STACK_ITEMS
+
         objs = {}
-        for i, (name, color) in enumerate(items):
+        for i, (name, color) in enumerate(TECH_STACK_ITEMS):
             obj, _ = TechStack.objects.get_or_create(
                 name=name, defaults={'color': color, 'order': i}
             )
             objs[name] = obj
         return objs
 
-    def _upsert_project(self, tech, slug, defaults, tech_names, features):
-        project, created = Project.objects.update_or_create(
-            slug=slug,
+    def _upsert_project(self, tech, data):
+        tech_names = data['tech']
+        features = data.get('features') or []
+        defaults = {
+            key: data[key]
+            for key in (
+                'title', 'subtitle', 'short_description', 'description', 'problem',
+                'solution', 'impact', 'technical_highlights', 'roles_and_users',
+                'workflows', 'scope_notes', 'category', 'company', 'role',
+                'start_date', 'end_date', 'live_url', 'github_url',
+                'is_proprietary', 'is_featured', 'is_published', 'order',
+            )
+            if key in data
+        }
+        # Ensure optional new fields exist even if missing from a dict.
+        for key in (
+            'subtitle', 'technical_highlights', 'roles_and_users',
+            'workflows', 'scope_notes',
+        ):
+            defaults.setdefault(key, '')
+
+        project, _ = Project.objects.update_or_create(
+            slug=data['slug'],
             defaults=defaults,
         )
+        missing = [n for n in tech_names if n not in tech]
+        if missing:
+            raise ValueError(f"Missing tech stack items for {data['slug']}: {missing}")
         project.tech_stack.set([tech[n] for n in tech_names])
         project.features.all().delete()
         for i, text in enumerate(features):
@@ -144,389 +153,14 @@ class Command(BaseCommand):
         return project
 
     def _seed_projects(self, tech, reset=False):
+        from apps.projects.seed_data import PROJECTS
+
         if reset:
             Project.objects.all().delete()
 
-        # 0. Personal Portfolio - public, featured first
-        self._upsert_project(
-            tech,
-            slug='personal-portfolio',
-            defaults={
-                'title': 'Personal Portfolio',
-                'short_description': (
-                    'Minimal dark Django portfolio with SEO, Unfold admin, self-hosted '
-                    'fonts, and WhiteNoise - built to showcase work without framework noise.'
-                ),
-                'description': (
-                    'A typography-first personal portfolio built with Django. Content is '
-                    'managed in the admin (projects, skills, experience, writing), served '
-                    'with self-hosted fonts and WhiteNoise for static assets, and structured '
-                    'for clear SEO (meta tags, Person JSON-LD, skip-to-content). The design '
-                    'stays intentionally quiet so the work and writing do the talking.'
-                ),
-                'problem': (
-                    'I needed a place to present client and personal work honestly - with '
-                    'editable content, decent SEO, and a calm dark layout - without shipping '
-                    'another generic template site.'
-                ),
-                'solution': (
-                    'Built a small Django app with Unfold admin, model-driven sections, '
-                    'manifest static files via WhiteNoise, and a minimal dark UI. Projects '
-                    'carry problem / solution / impact so recruiters can scan outcomes, not '
-                    'just screenshots.'
-                ),
-                'impact': (
-                    'One place to keep projects, skills, and writing current. Public source '
-                    'on GitHub. Deploy-ready structure once production hardening is done.'
-                ),
-                'category': 'web',
-                'company': '',
-                'role': 'Full-Stack Developer',
-                'start_date': date(2025, 1, 1),
-                'end_date': None,
-                'is_featured': True,
-                'is_published': True,
-                'order': 0,
-                'github_url': 'https://github.com/G-Laluyashwanth/portfolio',
-                'live_url': '',
-                'is_proprietary': False,
-            },
-            tech_names=[
-                'Python', 'Django', 'PostgreSQL', 'WhiteNoise',
-                'HTML5', 'CSS3', 'JavaScript', 'Git', 'GitHub',
-            ],
-            features=[
-                'Minimal dark, typography-first layout with subtle dot background',
-                'Content managed via Unfold Django admin (projects, skills, experience, posts)',
-                'SEO basics: meta tags, Person JSON-LD, skip-to-content link',
-                'Self-hosted fonts and WhiteNoise for static asset serving',
-                'Problem / solution / impact fields on project detail pages',
-            ],
-        )
+        for data in PROJECTS:
+            self._upsert_project(tech, data)
 
-        # 1. ISO Audit Document Generator - flagship (proprietary)
-        self._upsert_project(
-            tech,
-            slug='iso-audit-document-generator',
-            defaults={
-                'title': 'ISO Audit Document Generator',
-                'short_description': (
-                    'Django-based platform that auto-generates 29 audit documents per client '
-                    'engagement from a single multi-step form - replacing 2-4 hours of manual work.'
-                ),
-                'description': (
-                    'A production Django web application built for Concept QA Labs to eliminate '
-                    'manual document creation across ISO audit engagements. The team previously '
-                    'created 29 audit documents per client by hand, taking 2-4 hours with high '
-                    'error rates and zero version control. This system captures audit information '
-                    'once via a 4-step wizard and auto-generates every required document from '
-                    'templates - Word and Excel - using python-docx and openpyxl.'
-                ),
-                'problem': (
-                    'Team members manually created 29 audit documents per client engagement, '
-                    'spending 2-4 hours per project with frequent errors, inconsistent formatting, '
-                    'and no version history. As the client base grew, this became a major bottleneck.'
-                ),
-                'solution': (
-                    'Designed and built a Django + PostgreSQL application with a multi-step audit '
-                    'entry wizard, a template-driven document engine using python-docx and openpyxl, '
-                    'asynchronous document generation via Celery + Redis, version tracking, and a '
-                    'tree-view sidebar for browsing generated documents per engagement. Includes '
-                    'auditor-day calculation logic that adjusts for head count, standard, complexity, '
-                    'remote/multi-site factors, and produces consistent outputs across the team.'
-                ),
-                'impact': (
-                    'Reduced document generation time from 2-4 hours to under 5 minutes per '
-                    'engagement. Eliminated manual transcription errors. Introduced version control '
-                    'and audit history for compliance. Standardized document formatting across all '
-                    'team members and engagements.'
-                ),
-                'category': 'automation',
-                'company': 'Concept QA Labs Pvt. Ltd.',
-                'role': 'Full-Stack Developer',
-                'start_date': date(2024, 9, 1),
-                'end_date': None,
-                'is_featured': True,
-                'is_published': True,
-                'order': 1,
-                'github_url': '',
-                'live_url': '',
-                'is_proprietary': True,
-            },
-            tech_names=[
-                'Python', 'Django', 'Django REST Framework', 'PostgreSQL',
-                'Celery', 'Redis', 'python-docx', 'openpyxl', 'JavaScript', 'HTML5', 'CSS3',
-            ],
-            features=[
-                'Multi-step audit entry wizard with field validation and auto-save',
-                'Template-driven generation of 29 documents (Word + Excel) per engagement',
-                'Asynchronous document generation via Celery + Redis for non-blocking UX',
-                'Auditor-day calculation engine with remote/multi-site adjustments',
-                'Version control and document history per engagement',
-                'Tree-view sidebar for browsing generated documents by stage',
-                'Role-based access control and authentication',
-            ],
-        )
-
-        # 2. CQAL Client Management System
-        self._upsert_project(
-            tech,
-            slug='cqal-client-management-system',
-            defaults={
-                'title': 'CQAL Client Management System',
-                'short_description': (
-                    'Enterprise audit tracking platform with automated scheduling, RBAC, '
-                    'real-time dashboards, and ISO certification trend analysis using Pandas + Matplotlib.'
-                ),
-                'description': (
-                    'A full-featured client management and audit tracking system built for '
-                    'Concept QA Labs to streamline ISO 9001, ISO 20000, ISO 27001, ISO 14001, '
-                    'and CMMI engagements. The system automates audit reminder scheduling '
-                    '(45 days before audits), provides one-click email reminders with pre-defined '
-                    'templates, supports role-based access control, and generates Excel exports '
-                    'with custom formatting. Also includes a Trend Analysis module that visualizes '
-                    'ISO certification growth across years using Python, Pandas, and Matplotlib.'
-                ),
-                'problem': (
-                    'Manual tracking of audit schedules across multiple ISO standards led to '
-                    'missed deadlines, inefficient client communication, and no visibility into '
-                    'historical certification trends.'
-                ),
-                'solution': (
-                    'Built a Django + PostgreSQL application with normalized schemas supporting '
-                    'complex many-to-many audit-client relationships, automated date calculation '
-                    '(surveillance, recertification, reminder dates), an ISO Monthly Tracker, '
-                    'role-based access control, integrated email notifications, and Excel exports '
-                    'using openpyxl. Added a Business Intelligence module with ISO certification '
-                    'trend analysis (ISO 27001, ISO 9001:2015, ISO 20000) using Pandas for data '
-                    'processing and Matplotlib for visualization, generated via Google Colab.'
-                ),
-                'impact': (
-                    'Significantly reduced manual follow-up effort. Eliminated missed audit '
-                    'deadlines. Provided real-time dashboards with KPI metrics. Enabled data-driven '
-                    'business insights via the certification trend analysis module.'
-                ),
-                'category': 'web',
-                'company': 'Concept QA Labs Pvt. Ltd.',
-                'role': 'Full-Stack Developer',
-                'start_date': date(2023, 6, 1),
-                'end_date': None,
-                'is_featured': True,
-                'is_published': True,
-                'order': 2,
-                'github_url': '',
-                'live_url': '',
-                'is_proprietary': True,
-            },
-            tech_names=[
-                'Python', 'Django', 'PostgreSQL', 'MySQL', 'JavaScript',
-                'HTML5', 'CSS3', 'Bootstrap', 'jQuery', 'openpyxl',
-                'Pandas', 'Matplotlib', 'Google Colab',
-            ],
-            features=[
-                'Automated audit reminder scheduling (45 days before audits)',
-                'Role-based access control (RBAC) with secure authentication',
-                'ISO Monthly Tracker with year/month filtering and detailed views',
-                'Real-time dashboards: total clients, ISO/CMMI breakdowns, task status',
-                'One-click email reminders with pre-defined templates',
-                'Excel export with custom formatting via openpyxl',
-                'ISO Trend Analysis module: certification growth visualizations using Pandas + Matplotlib',
-                'Task Management and Leave Management workflows',
-            ],
-        )
-
-        # 3. Concept QA Labs Corporate Website
-        self._upsert_project(
-            tech,
-            slug='concept-qa-labs-corporate-website',
-            defaults={
-                'title': 'Concept QA Labs Corporate Website',
-                'short_description': (
-                    'Fully responsive, SEO-optimized corporate website built with Django + MySQL - '
-                    'dynamic content management, contact workflows, and mobile-first design.'
-                ),
-                'description': (
-                    'Architected and delivered a production corporate website for Concept QA Labs '
-                    'from requirements to deployment. Built with Django and MySQL with a focus on '
-                    'SEO optimization, performance, and mobile-first responsive design. Includes '
-                    'dynamic content management, contact form workflows, and optimized static '
-                    'asset delivery for fast page loads.'
-                ),
-                'problem': (
-                    'The company needed a professional, content-managed corporate presence to '
-                    'showcase services and capture leads.'
-                ),
-                'solution': (
-                    'Designed and built a Django-based site with custom admin for content '
-                    'management, MySQL backend, Bootstrap-powered responsive layout, and '
-                    'SEO-optimized templates.'
-                ),
-                'impact': (
-                    "Established the company's professional digital presence with cross-browser "
-                    'compatibility, mobile-first design, and fast load times.'
-                ),
-                'category': 'website',
-                'company': 'Concept QA Labs Pvt. Ltd.',
-                'role': 'Full-Stack Developer',
-                'start_date': date(2022, 10, 1),
-                'end_date': date(2023, 3, 1),
-                'is_featured': True,
-                'is_published': True,
-                'order': 3,
-                'github_url': '',
-                'live_url': 'https://conceptqalabs.org/',
-                'is_proprietary': True,
-            },
-            tech_names=[
-                'Python', 'Django', 'MySQL', 'Bootstrap', 'HTML5', 'CSS3', 'JavaScript', 'jQuery',
-            ],
-            features=[
-                'Fully responsive, mobile-first corporate website',
-                'SEO-optimized templates with semantic HTML and meta tags',
-                'Dynamic content management via Django admin',
-                'Contact form with email workflows',
-                'Cross-browser compatibility and performance optimization',
-            ],
-        )
-
-        # 4. Process Quality Excellence (PQE) Website
-        self._upsert_project(
-            tech,
-            slug='process-quality-excellence-platform',
-            defaults={
-                'title': 'Process Quality Excellence Platform',
-                'short_description': (
-                    'High-performance static site for CMMI/ISO training services with '
-                    'optimized load times and clear content architecture.'
-                ),
-                'description': (
-                    'Developed a high-performance static website for Process Quality Excellence (PQE) '
-                    'showcasing CMMI and ISO training services. Built with vanilla HTML5, CSS3, '
-                    'JavaScript, and Bootstrap with a focus on clear content architecture for '
-                    'training courses, schedules, and trainer profiles.'
-                ),
-                'problem': (
-                    'PQE needed a clear, fast, professional web presence to showcase training '
-                    'services and trainer credentials.'
-                ),
-                'solution': (
-                    'Built a hand-crafted static site with optimized assets, semantic markup, '
-                    'and a content structure designed for end-user clarity.'
-                ),
-                'impact': (
-                    'Delivered a fast-loading, accessible, professional site that effectively '
-                    "communicates PQE's training offerings."
-                ),
-                'category': 'website',
-                'company': 'Concept QA Labs Pvt. Ltd.',
-                'role': 'Frontend Developer',
-                'start_date': date(2023, 4, 1),
-                'end_date': date(2023, 7, 1),
-                'is_featured': True,
-                'is_published': True,
-                'order': 4,
-                'github_url': '',
-                'live_url': 'https://pqellp.com',
-                'is_proprietary': True,
-            },
-            tech_names=['HTML5', 'CSS3', 'JavaScript', 'Bootstrap'],
-            features=[
-                'High-performance static site with optimized load times',
-                'Clear content architecture for courses, schedules, and trainers',
-                'Mobile-first responsive design',
-                'Semantic HTML for accessibility and SEO',
-            ],
-        )
-
-        # 5. Jira Automation & Audit Tracking System
-        self._upsert_project(
-            tech,
-            slug='jira-automation-audit-tracking-system',
-            defaults={
-                'title': 'Jira Automation & Audit Tracking System',
-                'short_description': (
-                    'CMMI and ISO audit tracking workflows built with advanced JQL filters, '
-                    'chained Jira Automation rules, and 7 custom dashboards.'
-                ),
-                'description': (
-                    'Designed and configured comprehensive CMMI and ISO audit tracking workflows '
-                    'in Jira using advanced JQL filters, Jira Automation rules, and Confluence '
-                    'documentation. Built chained automation rules for CMMI Benchmark Appraisal '
-                    'workflows, certificate approvals, compliance deadline management, and '
-                    'stakeholder notifications.'
-                ),
-                'problem': (
-                    'Manual coordination across CMMI and ISO audit workflows led to missed '
-                    'deadlines and inconsistent process tracking.'
-                ),
-                'solution': (
-                    'Configured Jira projects, custom fields, JQL filters, automation rules, and '
-                    'dashboards to fully automate audit tracking, certificate approvals, and '
-                    'compliance reporting.'
-                ),
-                'impact': (
-                    'Built 7 custom Jira dashboards with KPI metrics, filter-based gadgets, and '
-                    'stakeholder-ready reporting views - eliminating manual status tracking.'
-                ),
-                'category': 'automation',
-                'company': 'Concept QA Labs Pvt. Ltd.',
-                'role': 'Jira Administrator',
-                'start_date': date(2023, 1, 1),
-                'end_date': None,
-                'is_featured': True,
-                'is_published': True,
-                'order': 5,
-                'github_url': '',
-                'live_url': '',
-                'is_proprietary': True,
-            },
-            tech_names=['Jira', 'JQL', 'Confluence'],
-            features=[
-                'CMMI and ISO audit tracking workflows with advanced JQL filters',
-                'Chained Jira Automation rules for benchmark appraisals and approvals',
-                '7 custom Jira dashboards with KPI metrics and stakeholder views',
-                'Confluence documentation for processes and standards',
-            ],
-        )
-
-        # 99. ML project draft - unpublished until metrics + public repo are ready
-        self._upsert_project(
-            tech,
-            slug='ml-project-draft',
-            defaults={
-                'title': 'ML project (draft)',
-                'short_description': (
-                    'Placeholder for the machine-learning project currently in progress - '
-                    'publish when metrics and a public repo are ready.'
-                ),
-                'description': (
-                    'This is a draft entry reserved for an ML project I am building for the '
-                    'portfolio. It will stay unpublished until there is a clear problem statement, '
-                    'honest metrics, and a public repository (or an explicit note that the work '
-                    'is proprietary). The goal is not to pad the site with unfinished work - it '
-                    'is to leave a slot that becomes real when the model and evaluation story '
-                    'are ready to ship.'
-                ),
-                'problem': '',
-                'solution': '',
-                'impact': '',
-                'category': 'ml',
-                'company': '',
-                'role': 'ML Engineer',
-                'start_date': None,
-                'end_date': None,
-                'is_featured': False,
-                'is_published': False,
-                'order': 99,
-                'github_url': '',
-                'live_url': '',
-                'is_proprietary': False,
-            },
-            tech_names=['Python', 'Pandas', 'NumPy', 'scikit-learn', 'Matplotlib'],
-            features=[],
-        )
-
-# ~~~
     def _seed_skills(self):
         # Skills list is authoritative when seeding - wipe then recreate.
         Skill.objects.all().delete()
@@ -608,7 +242,7 @@ class Command(BaseCommand):
                     order=i,
                 )
 
-# ~~~
+
     def _seed_experience(self):
         # Small fixed set - delete and recreate so re-runs stay in sync.
         Experience.objects.all().delete()
@@ -664,7 +298,7 @@ class Command(BaseCommand):
             is_published=True,
         )
 
-# ~~~
+
     def _seed_education(self):
         Education.objects.all().delete()
 
@@ -692,7 +326,7 @@ class Command(BaseCommand):
             order=2,
         )
 
-# ~~~
+
     def _seed_writing(self):
         Post.objects.update_or_create(
             slug='moving-from-full-stack-into-machine-learning',

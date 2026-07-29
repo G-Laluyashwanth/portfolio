@@ -15,6 +15,7 @@
     {{ project.get_category_display }}{% if project.company %} · {{ project.company }}{% endif %}{% if project.role %} · {{ project.role }}{% endif %}
   </p>
   <h1 class="case__title">{{ project.title }}</h1>
+  {% if project.subtitle %}<p class="case__subtitle">{{ project.subtitle }}</p>{% endif %}
   <p class="case__lead">{{ project.short_description }}</p>
 
   <p class="case__meta" style="margin-top:16px;">
@@ -38,10 +39,12 @@
   </div>
   {% endif %}
 
+  {% if project.description %}
   <section class="block">
     <h2 class="block__label">Overview</h2>
     <div class="prose">{{ project.description|linebreaks }}</div>
   </section>
+  {% endif %}
 
   {% if project.problem %}
   <section class="block">
@@ -73,10 +76,46 @@
   </section>
   {% endif %}
 
+  {% if project.get_technical_highlights_list %}
+  <section class="block">
+    <h2 class="block__label">Technical highlights</h2>
+    <ul class="case__features">
+      {% for item in project.get_technical_highlights_list %}<li>{{ item }}</li>{% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  {% if project.get_roles_list %}
+  <section class="block">
+    <h2 class="block__label">Roles & users</h2>
+    <ul class="case__features">
+      {% for item in project.get_roles_list %}<li>{{ item }}</li>{% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  {% if project.get_workflows_list %}
+  <section class="block">
+    <h2 class="block__label">Core workflows</h2>
+    <ul class="case__features">
+      {% for item in project.get_workflows_list %}<li>{{ item }}</li>{% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
   {% if project.tech_stack.all %}
   <section class="block">
     <h2 class="block__label">Built with</h2>
     <p class="case__tech">{% for tech in project.tech_stack.all %}{{ tech.name }}{% if not forloop.last %} · {% endif %}{% endfor %}</p>
+  </section>
+  {% endif %}
+
+  {% if project.get_scope_notes_list %}
+  <section class="block">
+    <h2 class="block__label">Scope notes</h2>
+    <ul class="case__features case__features--muted">
+      {% for item in project.get_scope_notes_list %}<li>{{ item }}</li>{% endfor %}
+    </ul>
   </section>
   {% endif %}
 

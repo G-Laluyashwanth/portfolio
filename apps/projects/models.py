@@ -41,14 +41,35 @@ class Project(models.Model):
 
     title = models.CharField(max_length=160)
     slug = models.SlugField(max_length=200, unique=True, blank=True)
-    short_description = models.CharField(
+    subtitle = models.CharField(
         max_length=240,
-        help_text='One-line summary shown on cards.'
+        blank=True,
+        help_text='Short subtitle under the title on the case study page.',
     )
-    description = models.TextField(help_text='Full project description shown on detail page.')
+    short_description = models.CharField(
+        max_length=400,
+        help_text='One-liner shown on home cards and as the case-study lead.',
+    )
+    description = models.TextField(help_text='Overview shown on the detail page.')
     problem = models.TextField(blank=True, help_text='What problem did this solve?')
     solution = models.TextField(blank=True, help_text='How did you solve it?')
-    impact = models.TextField(blank=True, help_text='Measurable outcomes / metrics.')
+    impact = models.TextField(blank=True, help_text='Measurable outcomes / capability outcomes.')
+    technical_highlights = models.TextField(
+        blank=True,
+        help_text='Architecture / technical highlights. One point per line.',
+    )
+    roles_and_users = models.TextField(
+        blank=True,
+        help_text='Who uses the system. One role per line.',
+    )
+    workflows = models.TextField(
+        blank=True,
+        help_text='Core workflows. One step or flow per line.',
+    )
+    scope_notes = models.TextField(
+        blank=True,
+        help_text='Honest scope notes (what this is / is not). One note per line.',
+    )
 
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='web')
     company = models.CharField(max_length=160, blank=True, help_text='e.g. Concept QA Labs Pvt. Ltd.')
@@ -61,7 +82,7 @@ class Project(models.Model):
     github_url = models.URLField(blank=True)
     is_proprietary = models.BooleanField(
         default=False,
-        help_text='If True and github_url is empty, show “Source private” on the site.',
+        help_text='If True and github_url is empty, show "Source private" on the site.',
     )
 
     start_date = models.DateField(blank=True, null=True)
@@ -99,6 +120,21 @@ class Project(models.Model):
             return ''
         first = self.impact.strip().split('. ')[0].strip().rstrip('.')
         return f'{first}.' if first else ''
+
+    def _lines(self, value):
+        return [line.strip() for line in (value or '').splitlines() if line.strip()]
+
+    def get_technical_highlights_list(self):
+        return self._lines(self.technical_highlights)
+
+    def get_roles_list(self):
+        return self._lines(self.roles_and_users)
+
+    def get_workflows_list(self):
+        return self._lines(self.workflows)
+
+    def get_scope_notes_list(self):
+        return self._lines(self.scope_notes)
 
 
 class ProjectFeature(models.Model):

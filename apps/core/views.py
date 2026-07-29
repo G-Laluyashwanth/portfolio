@@ -16,7 +16,7 @@ def home(request):
     context = {
         'featured_projects': Project.objects.filter(
             is_published=True, is_featured=True
-        ).prefetch_related('tech_stack')[:6],
+        ).prefetch_related('tech_stack')[:8],
         'skill_categories': SkillCategory.objects.prefetch_related(
             featured_skills
         ).filter(skills__is_featured=True).distinct(),

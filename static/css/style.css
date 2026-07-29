@@ -306,12 +306,18 @@ a.item__title:hover { text-decoration: underline; text-decoration-color: var(--t
 }
 .case__title { font-size: 1.6rem; letter-spacing: -0.01em; }
 .case__lead { color: var(--muted); margin-top: 12px; font-size: 1.02rem; }
+.case__subtitle {
+  margin-top: 8px;
+  color: var(--faint);
+  font-size: 0.98rem;
+}
 .case__links { margin-top: 20px; display: flex; gap: 18px; font-size: 0.9rem; }
 .case__cover { margin-top: 32px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
 .prose { color: var(--muted); }
 .prose p { margin-bottom: 14px; }
 .prose p:last-child { margin-bottom: 0; }
 .case__features { display: grid; gap: 8px; color: var(--muted); }
+.case__features--muted { color: var(--faint); }
 .case__features li { padding-left: 18px; position: relative; }
 .case__features li::before {
   content: "-"; position: absolute; left: 0; color: var(--faint);
