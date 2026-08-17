@@ -61,21 +61,31 @@ a:focus-visible, button:focus-visible {
 }
 .skip-link:focus { left: 16px; top: 16px; }
 
-/* ~ ambient background (subtle floating dots) ~ */
+/* ~ ambient background (dots drifting on a seamless loop) ~
+   The vignette lives on the wrapper and the motion on the inner layer, so the
+   mask stays put while the dots move under it. */
 .dots {
   position: fixed;
-  inset: -60px;                 /* oversize so the float never reveals an edge */
+  inset: -60px;                 /* oversize so the drift never reveals an edge */
   z-index: -1;
   pointer-events: none;
-  background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.6px);
-  background-size: 30px 30px;
+  overflow: hidden;
   mask-image: radial-gradient(ellipse at center, #000 60%, transparent 100%);
   -webkit-mask-image: radial-gradient(ellipse at center, #000 60%, transparent 100%);
-  animation: dotdrift 9s ease-in-out infinite alternate;
 }
+.dots__layer {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.6px);
+  background-size: 30px 30px;
+  animation: dotdrift 5s linear infinite;
+}
+/* Travels exactly one tile, so the last frame matches the first and the loop
+   restarts with no seam - constant motion instead of a bounce that stalls at
+   each end. */
 @keyframes dotdrift {
-  from { transform: translateY(-12px); }
-  to   { transform: translateY(12px); }
+  from { transform: translateY(0); }
+  to   { transform: translateY(30px); }
 }
 
 /* ~ layout ~ */
