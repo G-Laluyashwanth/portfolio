@@ -31,11 +31,6 @@
   {# Structured data (Person) #}
   {% if structured_data %}<script type="application/ld+json">{{ structured_data|safe }}</script>{% endif %}
 
-  {# Self-hosted Inter - preload weights used above the fold #}
-  <link rel="preload" href="{% static 'fonts/inter-400.woff2' %}" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="{% static 'fonts/inter-500.woff2' %}" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="{% static 'fonts/inter-600.woff2' %}" as="font" type="font/woff2" crossorigin />
-
   <link rel="stylesheet" href="{% static 'css/style.css' %}" />
   {% block extra_head %}{% endblock %}
 </head>

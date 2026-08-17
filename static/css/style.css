@@ -4,29 +4,6 @@
    contact cards for actions, otherwise one column / one font.
 */
 
-/* ~ self-hosted Inter (latin subset) ~ */
-@font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("../fonts/inter-400.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("../fonts/inter-500.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url("../fonts/inter-600.woff2") format("woff2");
-}
-
 :root {
   --bg:      #0e0f11;   /* near-black background */
   --text:    #f4f5f7;   /* primary text / links */
@@ -36,9 +13,10 @@
   --link-underline: #4a4f57;
   --dot:     rgba(255,255,255,0.14);  /* ambient background dots */
 
-  --max: 700px;
-  --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
-          Roboto, Helvetica, Arial, sans-serif;
+  --max: 900px;
+  /* Native system font: SF Pro on Apple, Segoe UI on Windows, Roboto on Android. */
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui,
+          "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 /* ~ reset ~ */

@@ -1,0 +1,7 @@
+/* Match the public site: render the admin in the native system font.
+   Unfold drives every surface off --font-sans, so overriding it is enough.
+   Material Symbols icons declare their own family and are unaffected. */
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui,
+               "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
