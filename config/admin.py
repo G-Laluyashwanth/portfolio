@@ -12,7 +12,6 @@ def environment_callback(request):
 
 
 def dashboard_callback(request, context):
-    from apps.contact.models import ContactSubmission
     from apps.core.models import Post
     from apps.projects.models import Project
 
@@ -20,7 +19,7 @@ def dashboard_callback(request, context):
         'portfolio_stats': {
             'projects': Project.objects.filter(is_published=True).count(),
             'posts': Post.objects.filter(is_published=True).count(),
-            'unread': ContactSubmission.objects.filter(is_read=False).count(),
+            'drafts': Project.objects.filter(is_published=False).count(),
         },
     })
     return context

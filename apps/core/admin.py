@@ -36,6 +36,12 @@ class SiteSettingsAdmin(ModelAdmin):
         }),
         ('Résumé', {
             'fields': ('resume',),
+            'description': (
+                'The site links to the PDF in <code>static/resume/</code>, not to this '
+                'upload, because uploaded files are not served in production. To publish '
+                'a new résumé, replace the file in <code>static/resume/</code> and deploy. '
+                'This field is only a local fallback when that directory is empty.'
+            ),
         }),
     )
 

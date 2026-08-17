@@ -8,6 +8,23 @@ from django.templatetags.static import static
 from .models import SiteSettings, HeroSection, Post
 
 
+def _resume_url(settings_obj):
+    """Resolve the résumé link.
+
+    A PDF committed under static/ wins over the admin upload, because media
+    files are not served once DEBUG is off. The admin upload is only a
+    fallback for local use until cloud storage exists.
+    """
+    static_dir = getattr(settings, 'RESUME_STATIC_DIR', '')
+    if static_dir:
+        pdfs = sorted((Path(settings.BASE_DIR) / 'static' / static_dir).glob('*.pdf'))
+        if pdfs:
+            return static(f'{static_dir}/{pdfs[0].name}')
+    if settings_obj and settings_obj.resume:
+        return settings_obj.resume.url
+    return ''
+
+
 def site_context(request):
     """Returns global context: site settings + active hero + nav flags."""
     try:
@@ -25,12 +42,7 @@ def site_context(request):
     except Exception:
         has_writing = False
 
-    resume_url = ''
-    resume_static = getattr(settings, 'RESUME_STATIC', '')
-    if resume_static and (Path(settings.BASE_DIR) / 'static' / resume_static).exists():
-        resume_url = static(resume_static)
-    elif settings_obj and settings_obj.resume:
-        resume_url = settings_obj.resume.url
+    resume_url = _resume_url(settings_obj)
 
     structured_data = ''
     if settings_obj:

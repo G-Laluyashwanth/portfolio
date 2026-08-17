@@ -150,27 +150,31 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Django 6 uses STORAGES (STATICFILES_STORAGE is ignored).
-# Manifest hashing only in production - local/tests use plain storage so
+# Manifest hashing only in production - local/tests use plain storage so a
 # missing staticfiles.json does not break {% static %} / static().
-_STATIC_BACKEND = (
-    'django.contrib.staticfiles.storage.StaticFilesStorage'
-    if DEBUG
-    else 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-)
+# Recorded as its own setting because Django's test runner overrides DEBUG
+# after settings load, so DEBUG cannot be used to infer this later.
+STATIC_MANIFEST_ENABLED = not DEBUG
 STORAGES = {
     'default': {
         'BACKEND': 'django.core.files.storage.FileSystemStorage',
     },
     'staticfiles': {
-        'BACKEND': _STATIC_BACKEND,
+        'BACKEND': (
+            'whitenoise.storage.CompressedManifestStaticFilesStorage'
+            if STATIC_MANIFEST_ENABLED
+            else 'django.contrib.staticfiles.storage.StaticFilesStorage'
+        ),
     },
 }
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Path under STATICFILES_DIRS for the résumé PDF (works with DEBUG=False).
-RESUME_STATIC = 'resume/Lalu_Yashwanth_Resume.pdf'
+# Directory under static/ holding the résumé PDF. The first *.pdf found there
+# is what the site links to, so replacing the file is the whole update workflow.
+# Static (not media) because uploads are not served when DEBUG=False.
+RESUME_STATIC_DIR = 'resume'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -210,6 +214,9 @@ UNFOLD = {
         },
     ],
     'BORDER_RADIUS': '8px',
+    'STYLES': [
+        lambda request: static('css/admin.css'),
+    ],
     'SHOW_VIEW_ON_SITE': True,
     'ENVIRONMENT': environment_callback,
     'DASHBOARD_CALLBACK': dashboard_callback,

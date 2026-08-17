@@ -3,18 +3,21 @@
 {% block content %}
 {% if portfolio_stats %}
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px;">
-  <div style="padding:16px;border:1px solid var(--border-color, #222);border-radius:8px;">
+  <a href="{% url 'admin:projects_project_changelist' %}?is_published__exact=1"
+     style="display:block;padding:16px;border:1px solid var(--border-color, #222);border-radius:8px;text-decoration:none;color:inherit;">
     <div style="opacity:.7;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;">Published projects</div>
     <div style="font-size:1.75rem;font-weight:600;margin-top:4px;">{{ portfolio_stats.projects }}</div>
-  </div>
-  <div style="padding:16px;border:1px solid var(--border-color, #222);border-radius:8px;">
+  </a>
+  <a href="{% url 'admin:core_post_changelist' %}?is_published__exact=1"
+     style="display:block;padding:16px;border:1px solid var(--border-color, #222);border-radius:8px;text-decoration:none;color:inherit;">
     <div style="opacity:.7;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;">Writing posts</div>
     <div style="font-size:1.75rem;font-weight:600;margin-top:4px;">{{ portfolio_stats.posts }}</div>
-  </div>
-  <div style="padding:16px;border:1px solid var(--border-color, #222);border-radius:8px;">
-    <div style="opacity:.7;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;">Unread messages</div>
-    <div style="font-size:1.75rem;font-weight:600;margin-top:4px;">{{ portfolio_stats.unread }}</div>
-  </div>
+  </a>
+  <a href="{% url 'admin:projects_project_changelist' %}?is_published__exact=0"
+     style="display:block;padding:16px;border:1px solid var(--border-color, #222);border-radius:8px;text-decoration:none;color:inherit;">
+    <div style="opacity:.7;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;">Draft projects</div>
+    <div style="font-size:1.75rem;font-weight:600;margin-top:4px;">{{ portfolio_stats.drafts }}</div>
+  </a>
 </div>
 {% endif %}
 {{ block.super }}

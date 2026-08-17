@@ -9,12 +9,12 @@ A minimal, typography-first personal portfolio built with **Django 6**. Content 
 ## Features
 
 - **Database-driven content** - projects, skills, experience, education, writing
-- **Minimal public UI** - typography-first, self-hosted Inter, no client-side JavaScript
+- **Minimal public UI** - typography-first, native system font, no client-side JavaScript, no webfont downloads
 - **Case studies** - problem / solution / impact pages with tech stack
 - **Writing + RSS** - posts with `/feed/`, plus `sitemap.xml` and `robots.txt`
 - **SEO** - meta tags, Open Graph, Person JSON-LD, skip-to-content link
 - **Admin** - django-unfold dark/light UI, structured sidebar, status badges
-- **Seed command** - `python manage.py seed_portfolio` (use `--reset` to wipe first)
+- **Seed command** - `python manage.py seed_portfolio` updates seeded rows in place and never deletes; `--reset` wipes the portfolio tables and rebuilds
 
 ~
 
@@ -61,7 +61,7 @@ portfolio/
 │   ├── experience/    # Work + education
 │   └── contact/       # Legacy ContactSubmission model (admin only; no public form)
 ├── config/            # Settings, URLs, Unfold sidebar
-├── static/            # CSS, fonts, favicon, OG image, résumé
+├── static/            # CSS, favicon, OG image, résumé PDF
 ├── templates/         # Public + admin templates
 └── manage.py
 ```

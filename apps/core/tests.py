@@ -1,10 +1,17 @@
 """Smoke and unit tests for the portfolio site."""
+from datetime import date
+from io import StringIO
+
 from django.contrib.auth.models import User
-from django.test import TestCase
+from django.core.management import call_command
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
+from apps.core.context_processors import _resume_url
 from apps.core.models import SiteSettings, Post, HeroSection
+from apps.experience.models import Education, Experience
 from apps.projects.models import Project
+from apps.skills.models import Skill, SkillCategory
 
 
 class PageRenderTests(TestCase):
@@ -163,15 +170,95 @@ class DeployConfigTests(TestCase):
 
     def test_storages_and_resume_configured(self):
         from django.conf import settings
-        backend = settings.STORAGES['staticfiles']['BACKEND']
-        self.assertTrue(
-            backend.endswith('StaticFilesStorage')
-            or 'CompressedManifestStaticFilesStorage' in backend
+
+        # Both backend names end in "StaticFilesStorage", so compare the full
+        # path - a suffix check would pass for either one.
+        expected = (
+            'whitenoise.storage.CompressedManifestStaticFilesStorage'
+            if settings.STATIC_MANIFEST_ENABLED
+            else 'django.contrib.staticfiles.storage.StaticFilesStorage'
         )
-        self.assertTrue(settings.RESUME_STATIC.startswith('resume/'))
+        self.assertEqual(settings.STORAGES['staticfiles']['BACKEND'], expected)
+        self.assertTrue(settings.RESUME_STATIC_DIR)
+
+    def test_local_runs_without_manifest_storage(self):
+        """Manifest storage locally breaks {% static %} until collectstatic runs."""
+        from django.conf import settings
+
+        if not settings.STATIC_MANIFEST_ENABLED:
+            self.assertNotIn('Manifest', settings.STORAGES['staticfiles']['BACKEND'])
 
     def test_home_serves_static_resume_link(self):
         resp = self.client.get(reverse('core:home'))
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, '/static/resume/')
         self.assertNotContains(resp, '/media/resume/')
+
+
+class ResumeLinkTests(TestCase):
+    """A committed static PDF outranks the admin upload, which is not served in production."""
+
+    def _with_upload(self):
+        obj = SiteSettings.load()
+        obj.resume = 'resume/uploaded.pdf'
+        obj.save()
+        return obj
+
+    def test_static_pdf_wins_over_admin_upload(self):
+        url = _resume_url(self._with_upload())
+        self.assertTrue(url.startswith('/static/resume/'))
+        self.assertNotIn('uploaded.pdf', url)
+
+    @override_settings(RESUME_STATIC_DIR='no-such-directory')
+    def test_falls_back_to_upload_when_no_static_pdf(self):
+        url = _resume_url(self._with_upload())
+        self.assertIn('resume/uploaded.pdf', url)
+        self.assertNotIn('/static/', url)
+
+    @override_settings(RESUME_STATIC_DIR='no-such-directory')
+    def test_empty_when_nothing_available(self):
+        self.assertEqual(_resume_url(SiteSettings.load()), '')
+
+
+class SeedCommandTests(TestCase):
+    """seed_portfolio must not destroy admin-authored content unless --reset is passed."""
+
+    def _seed(self, *args):
+        call_command('seed_portfolio', *args, stdout=StringIO())
+
+    def _add_by_hand(self):
+        Skill.objects.create(
+            category=SkillCategory.objects.first(), name='Hand Added Skill',
+        )
+        Experience.objects.create(
+            company='Hand Added Co',
+            role='Contractor',
+            start_date=date(2024, 1, 1),
+            summary='Added through the admin, not the seed file.',
+        )
+        Education.objects.create(
+            institution='Hand Added Institute', degree='Certificate',
+        )
+
+    def test_rerun_without_reset_keeps_hand_added_records(self):
+        self._seed()
+        hero_pk = HeroSection.objects.get().pk
+        self._add_by_hand()
+
+        self._seed()
+
+        self.assertTrue(Skill.objects.filter(name='Hand Added Skill').exists())
+        self.assertTrue(Experience.objects.filter(company='Hand Added Co').exists())
+        self.assertTrue(Education.objects.filter(institution='Hand Added Institute').exists())
+        # Updated in place rather than dropped and recreated with a new pk.
+        self.assertEqual(HeroSection.objects.get().pk, hero_pk)
+
+    def test_reset_wipes_hand_added_records(self):
+        self._seed()
+        self._add_by_hand()
+
+        self._seed('--reset')
+
+        self.assertFalse(Skill.objects.filter(name='Hand Added Skill').exists())
+        self.assertFalse(Experience.objects.filter(company='Hand Added Co').exists())
+        self.assertFalse(Education.objects.filter(institution='Hand Added Institute').exists())

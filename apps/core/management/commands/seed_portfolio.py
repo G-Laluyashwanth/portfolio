@@ -1,7 +1,10 @@
 """
 Seed the portfolio database with Lalu Yashwanth's real content.
 Run with: python manage.py seed_portfolio
-Use --reset to wipe existing data first.
+
+Without --reset nothing is ever deleted: seeded records are updated in place
+and anything added by hand in the admin is left alone. Use --reset to wipe the
+portfolio tables and rebuild them from scratch.
 """
 from datetime import date
 from django.core.management.base import BaseCommand
@@ -41,7 +44,7 @@ class Command(BaseCommand):
         self._seed_site_settings()
 
         self.stdout.write('Seeding hero...')
-        self._seed_hero()
+        self._seed_hero(reset=reset)
 
         self.stdout.write('Seeding tech stack...')
         tech = self._seed_tech_stack()
@@ -50,13 +53,13 @@ class Command(BaseCommand):
         self._seed_projects(tech, reset=reset)
 
         self.stdout.write('Seeding skills...')
-        self._seed_skills()
+        self._seed_skills(reset=reset)
 
         self.stdout.write('Seeding experience...')
-        self._seed_experience()
+        self._seed_experience(reset=reset)
 
         self.stdout.write('Seeding education...')
-        self._seed_education()
+        self._seed_education(reset=reset)
 
         self.stdout.write('Seeding writing...')
         self._seed_writing()
@@ -87,24 +90,35 @@ class Command(BaseCommand):
         s.twitter_url = 'https://x.com/laluyashwanth'
         s.save()
 
-    def _seed_hero(self):
-        # Singleton-ish: always replace with one active hero.
-        HeroSection.objects.all().delete()
-        HeroSection.objects.create(
-            eyebrow='Full-Stack Developer · Python · Django · ML',
-            headline='Building scalable web applications with Python, Django, and Machine Learning.',
-            subheadline=(
+    def _seed_hero(self, reset=False):
+        # Singleton-ish: one active hero, updated in place so re-runs do not
+        # drop the row (and its pk) out from under anything referencing it.
+        if reset:
+            HeroSection.objects.all().delete()
+
+        defaults = {
+            'eyebrow': 'Full-Stack Developer · Python · Django · ML',
+            'headline': 'Building scalable web applications with Python, Django, and Machine Learning.',
+            'subheadline': (
                 'I build full-stack systems with Python and Django - enterprise web apps, '
                 'REST APIs, and automation tools that remove hours of manual work. Lately I have '
                 'been drawn to the seam where clean engineering meets machine learning, and what '
                 'becomes possible when software can learn instead of just follow rules.'
             ),
-            cta_primary_label='View Projects',
-            cta_primary_url='#projects',
-            cta_secondary_label='Get in Touch',
-            cta_secondary_url='#contact',
-            is_active=True,
-        )
+            'cta_primary_label': 'View Projects',
+            'cta_primary_url': '#projects',
+            'cta_secondary_label': 'Get in Touch',
+            'cta_secondary_url': '#contact',
+            'is_active': True,
+        }
+
+        hero = HeroSection.objects.order_by('pk').first()
+        if hero is None:
+            HeroSection.objects.create(**defaults)
+        else:
+            for field, value in defaults.items():
+                setattr(hero, field, value)
+            hero.save()
 
 
     def _seed_tech_stack(self):
@@ -161,10 +175,10 @@ class Command(BaseCommand):
         for data in PROJECTS:
             self._upsert_project(tech, data)
 
-    def _seed_skills(self):
-        # Skills list is authoritative when seeding - wipe then recreate.
-        Skill.objects.all().delete()
-        SkillCategory.objects.all().delete()
+    def _seed_skills(self, reset=False):
+        if reset:
+            Skill.objects.all().delete()
+            SkillCategory.objects.all().delete()
 
         categories = [
             {
@@ -227,27 +241,31 @@ class Command(BaseCommand):
         ]
 
         for cat in categories:
-            category = SkillCategory.objects.create(
+            category, _ = SkillCategory.objects.update_or_create(
                 name=cat['name'],
-                description=cat['description'],
-                order=cat['order'],
+                defaults={
+                    'description': cat['description'],
+                    'order': cat['order'],
+                },
             )
             for i, (name, prof, years, featured) in enumerate(cat['skills']):
-                Skill.objects.create(
+                Skill.objects.update_or_create(
                     category=category,
                     name=name,
-                    proficiency=prof,
-                    years_experience=years,
-                    is_featured=featured,
-                    order=i,
+                    defaults={
+                        'proficiency': prof,
+                        'years_experience': years,
+                        'is_featured': featured,
+                        'order': i,
+                    },
                 )
 
 
-    def _seed_experience(self):
-        # Small fixed set - delete and recreate so re-runs stay in sync.
-        Experience.objects.all().delete()
+    def _seed_experience(self, reset=False):
+        if reset:
+            Experience.objects.all().delete()
 
-        Experience.objects.create(
+        self._upsert_experience(
             company='Concept QA Labs Pvt. Ltd.',
             role='Full-Stack Web Developer',
             employment_type='full_time',
@@ -275,7 +293,7 @@ class Command(BaseCommand):
             is_published=True,
         )
 
-        Experience.objects.create(
+        self._upsert_experience(
             company='Nvest Solutions',
             role='Web Developer Intern',
             employment_type='internship',
@@ -298,11 +316,17 @@ class Command(BaseCommand):
             is_published=True,
         )
 
+    def _upsert_experience(self, company, role, **defaults):
+        """Company + role is the natural key for a job entry."""
+        Experience.objects.update_or_create(
+            company=company, role=role, defaults=defaults,
+        )
 
-    def _seed_education(self):
-        Education.objects.all().delete()
+    def _seed_education(self, reset=False):
+        if reset:
+            Education.objects.all().delete()
 
-        Education.objects.create(
+        self._upsert_education(
             institution='Vidya Vikas Degree College',
             degree='Bachelor of Science (B.Sc)',
             field_of_study='Mathematics & Computer Science',
@@ -314,7 +338,7 @@ class Command(BaseCommand):
             order=1,
         )
 
-        Education.objects.create(
+        self._upsert_education(
             institution='Vidya Vikas Junior College',
             degree='Intermediate (MPC)',
             field_of_study='Mathematics, Physics & Chemistry',
@@ -324,6 +348,12 @@ class Command(BaseCommand):
             grade='A Grade',
             description='',
             order=2,
+        )
+
+    def _upsert_education(self, institution, degree, **defaults):
+        """Institution + degree is the natural key for an education entry."""
+        Education.objects.update_or_create(
+            institution=institution, degree=degree, defaults=defaults,
         )
 
 
