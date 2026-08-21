@@ -120,7 +120,7 @@ a:focus-visible, button:focus-visible {
 .nav a:hover { color: var(--text); }
 
 /* ~ intro ~ */
-.intro { padding-top: 40px; }
+.intro { padding-top: 72px; }
 .intro__role {
   color: var(--faint);
   font-size: 0.95rem;
